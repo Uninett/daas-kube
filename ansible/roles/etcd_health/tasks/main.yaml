@@ -6,3 +6,7 @@
   template:
     src: etcd_health.sh.j2
     dest: ./scripts/etcd_health.sh
+- name: Add Etcd backup script
+  template:
+    src: etcd_backup.sh.j2
+    dest: ./scripts/etcd_backup.sh
