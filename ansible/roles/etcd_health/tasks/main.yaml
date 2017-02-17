@@ -1,0 +1,8 @@
+- name: Prepare scripts directory
+  file:
+    dest: ./scripts
+    state: directory
+- name: Add Etcd health script
+  template:
+    src: etcd_health.sh.j2
+    dest: ./scripts/etcd_health.sh
