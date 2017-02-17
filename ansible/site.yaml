@@ -2,3 +2,4 @@
 - include: master.yaml
 - include: cluster_config.yaml
 - include: worker.yaml
+- include: scripts.yaml
