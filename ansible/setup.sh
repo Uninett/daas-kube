@@ -29,7 +29,6 @@ if [ ! -x ./tls/bin/cfssl -o ! -x ./tls/bin/cfssljson ]; then
 fi
 
 ./tls/init_cas.sh
-./tls/init_kubernetes_service_key.sh
 
 gpfs_installer="Spectrum_Scale_Advanced-4.2.2.1-x86_64-Linux-install"
 gpfs_dir="roles/gpfs/files"
