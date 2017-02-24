@@ -28,13 +28,13 @@ resource "openstack_compute_instance_v2" "master" {
     key_pair = "${openstack_compute_keypair_v2.keypair.name}"
     security_groups = [
         "default",
-        "ssh-uninett",
-        "nird-master",
+        "${openstack_networking_secgroup_v2.ssh_access.id}",
+        "${openstack_networking_secgroup_v2.kube_master.id}",
     ]
 
     #   Connecting to the set network with the provided floating ip.
     network {
-        uuid = "${var.cluster_network}"
+        uuid = "${openstack_networking_network_v2.network_1.id}"
         floating_ip = "${element(openstack_compute_floatingip_v2.master.*.address, count.index)}"
     }
 
@@ -71,13 +71,13 @@ resource "openstack_compute_instance_v2" "worker" {
     key_pair = "${openstack_compute_keypair_v2.keypair.name}"
     security_groups = [
         "default",
-        "ssh-uninett",
-        "kube-lb",
+        "${openstack_networking_secgroup_v2.ssh_access.id}",
+        "${openstack_networking_secgroup_v2.kube_lb.id}",
     ]
 
     #   Connecting to the set network with the provided floating ip.
     network {
-        uuid = "${var.cluster_network}"
+        uuid = "${openstack_networking_network_v2.network_1.id}"
         floating_ip = "${element(openstack_compute_floatingip_v2.worker.*.address, count.index)}"
     }
 
