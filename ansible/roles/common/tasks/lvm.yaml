@@ -18,6 +18,11 @@
   command: systemctl restart lvm2-monitor.service
   when: thin_pool_autoextend_threshold.changed or thin_pool_autoextend_percent.changed
 
+- name: Checking if volume group exists
+  command: 'vgdisplay vg'
+  changed_when: False
+  failed_when: False
+  register: check_vg_exists
 - name: Configuring LVM to use /dev/vdb
   command: "{{ item }}"
   with_items:
@@ -26,4 +31,5 @@
   - parted /dev/vdb set 1 lvm on
   - pvcreate /dev/vdb1
   - vgcreate vg /dev/vdb1
+  when: check_vg_exists.rc != 0
 
