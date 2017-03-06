@@ -2,12 +2,21 @@
   yum:
     name: lvm2
 
-- name: Configure lvm.conf
-  command: "{{ item }}"
-  with_items:
-  - sed -i 's/^[[:space:]]\+thin_pool_autoextend_threshold.*/\tthin_pool_autoextend_threshold = 80/' /etc/lvm/lvm.conf
-  - sed -i 's/^[[:space:]]\+thin_pool_autoextend_percent.*/\tthin_pool_autoextend_percent = 20/' /etc/lvm/lvm.conf
-  - systemctl restart lvm2-monitor.service
+- name: lvm.conf - thin_pool_autoextend_threshold
+  lineinfile:
+    dest: /etc/lvm/lvm.conf
+    regexp: '^\s*thin_pool_autoextend_threshold.*'
+    line: "\tthin_pool_autoextend_threshold = 80"
+  register: thin_pool_autoextend_threshold
+- name: lvm.conf - thin_pool_autoextend_percent
+  lineinfile:
+    dest: /etc/lvm/lvm.conf
+    regexp: '^\s*thin_pool_autoextend_percent.*'
+    line: "\tthin_pool_autoextend_percent = 20"
+  register: thin_pool_autoextend_percent
+- name: Restart lvm2-monitor.service
+  command: systemctl restart lvm2-monitor.service
+  when: thin_pool_autoextend_threshold.changed or thin_pool_autoextend_percent.changed
 
 - name: Configuring LVM to use /dev/vdb
   command: "{{ item }}"
