@@ -2,7 +2,7 @@
   yum:
     name: lvm2
 
-- name: Comnfigure lvm.conf
+- name: Configure lvm.conf
   command: "{{ item }}"
   with_items:
   - sed -i 's/^[[:space:]]\+thin_pool_autoextend_threshold.*/\tthin_pool_autoextend_threshold = 80/' /etc/lvm/lvm.conf
