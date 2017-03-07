@@ -4,5 +4,6 @@
     - docker
     - kubelet
     - kube_master_components
+    - zabbix
   vars_files:
   - vars.yaml

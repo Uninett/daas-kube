@@ -1,0 +1,43 @@
+- name: Create Zabbix configuration directory
+  file:
+    path: /etc/zabbix
+    state: directory
+    mode: 0755
+- name: Copy Zabbix agent SELinux policy file
+  copy:
+    src: zabbix_agent_setrlimit.te
+    dest: /etc/zabbix/zabbix_agent_setrlimit.te
+    owner: root
+    group: root
+    mode: 0644
+- name: Check if Zabbix agent SELinux policy is installed
+  command: sh -c "semodule -l | grep -q zabbix_agent_setrlimit"
+  changed_when: False
+  failed_when: False
+  register: check_zabbix_agent_policy
+- name: Install Zabbix agent SELinux policy is installed
+  command: sh -c 'checkmodule -m zabbix_agent_setrlimit.te -o zabbix_agent_setrlimit.mod && semodule_package -m zabbix_agent_setrlimit.mod -o zabbix_agent_setrlimit.pp && semodule -i zabbix_agent_setrlimit.pp && rm zabbix_agent_setrlimit.mod zabbix_agent_setrlimit.pp'
+  args:
+    chdir: /etc/zabbix
+  when: check_zabbix_agent_policy.rc != 0
+- name: Add Zabbix configuration file
+  template:
+    src: zabbix_agentd.conf.j2
+    dest: /etc/zabbix/zabbix_agentd.conf
+  register: zabbix_agentd
+- name: Set up Zabbix repository
+  yum_repository:
+    name: zabbix
+    description: Zabbix repository
+    baseurl: https://repo.zabbix.com/zabbix/3.2/rhel/7/x86_64/
+    gpgcheck: yes
+    gpgkey: https://repo.zabbix.com/RPM-GPG-KEY-ZABBIX-79EA5ED4
+- name: Install Zabbix agent
+  yum:
+    name: zabbix-agent
+- name: Restart Zabbix agent
+  service: name=zabbix-agent state=restarted enabled=yes
+  when: zabbix_agentd.changed
+- name: Enable Zabbix agent service
+  service: name=zabbix-agent state=running enabled=yes
+  when: not zabbix_agentd.changed

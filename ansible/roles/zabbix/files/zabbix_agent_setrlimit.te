@@ -1,0 +1,25 @@
+# When the Zabbix Agent starts, it attempts to disable coredumps. This
+# is to prevent leaking cryptographic keys in the
+# coredump. Unfortunately, SELinux blocks Zabbix from disabling
+# coredumps.
+#
+# This causes the following error to be logged in
+# `/var/log/zabbix/zabbix_agentd.log`:
+#
+# > cannot disable core dump, exiting...
+# > cannot set resource limit: [13] Permission denied
+#
+# See:
+# * https://support.zabbix.com/browse/ZBX-10086
+# * https://support.zabbix.com/browse/ZBX-10542
+# * https://support.zabbix.com/browse/ZBX-11631
+#
+# This selinux policy allows the Zabbix agent to call the
+# `setrlimit()` system call.
+
+module zabbix_agent_setrlimit 1.0;
+require {
+	type zabbix_agent_t;
+	class process setrlimit;
+}
+allow zabbix_agent_t self:process setrlimit;
