@@ -56,7 +56,7 @@ resource "openstack_networking_secgroup_rule_v2" "kube_lb_nodeport_ipv4" {
     direction = "ingress"
     ethertype = "IPv4"
     protocol = "tcp"
-    port_range_min = 80
+    port_range_min = 30000
     port_range_max = 32767
     remote_ip_prefix = "${element(var.allow_lb_from_v4, count.index)}"
     security_group_id = "${openstack_networking_secgroup_v2.kube_lb.id}"
