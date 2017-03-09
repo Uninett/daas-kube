@@ -4,12 +4,12 @@
     value: 1
     sysctl_file: /etc/sysctl.d/00-forwarding.conf
 - name: Check if docker thin-pool exists
-  command: 'lvdisplay vg/docker'
+  command: 'lvdisplay {{ lvm_volume_group }}/docker'
   changed_when: False
   failed_when: False
   register: check_thinpool_exists
 - name: create docker-thinpool
-  command: lvcreate --type thin-pool -n docker -l 35%VG vg
+  command: lvcreate --type thin-pool -n docker -l 35%VG {{ lvm_volume_group }}
   when: check_thinpool_exists.rc != 0
 - name: Set up Docker YUM repository
   yum_repository:
@@ -29,8 +29,8 @@
     group: root
     mode: 0755
 - name: Config Docker service
-  copy:
-    src: daemon.json
+  template:
+    src: daemon.json.j2
     dest: /etc/docker/daemon.json
     owner: root
     group: root
