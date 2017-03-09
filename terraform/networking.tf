@@ -46,29 +46,18 @@ resource "openstack_networking_secgroup_rule_v2" "ssh_access_ipv4" {
 resource "openstack_networking_secgroup_v2" "kube_lb" {
     region = "${var.region}"
     name = "kube_lb"
-    description = "Security groups for allowing web access to lb nodes"
+    description = "Security groups for allowing access to lb nodes"
 }
 
-resource "openstack_networking_secgroup_rule_v2" "kube_lb_http_ipv4" {
+# Allows access to kubernetes node port range from load balancers
+resource "openstack_networking_secgroup_rule_v2" "kube_lb_nodeport_ipv4" {
     count = "${length(var.allow_lb_from_v4)}"
     region = "${var.region}"
     direction = "ingress"
     ethertype = "IPv4"
     protocol = "tcp"
     port_range_min = 80
-    port_range_max = 80
-    remote_ip_prefix = "${element(var.allow_lb_from_v4, count.index)}"
-    security_group_id = "${openstack_networking_secgroup_v2.kube_lb.id}"
-}
-
-resource "openstack_networking_secgroup_rule_v2" "kube_lb_https_ipv4" {
-    count = "${length(var.allow_lb_from_v4)}"
-    region = "${var.region}"
-    direction = "ingress"
-    ethertype = "IPv4"
-    protocol = "tcp"
-    port_range_min = 443
-    port_range_max = 443
+    port_range_max = 32767
     remote_ip_prefix = "${element(var.allow_lb_from_v4, count.index)}"
     security_group_id = "${openstack_networking_secgroup_v2.kube_lb.id}"
 }
