@@ -1,6 +1,6 @@
-k8s_ver: 1.5.2
+k8s_ver: 1.5.3
 # k8s_next_ver: 1.x.y
-etcd_ver: 3.1.0
+etcd_ver: 3.1.1
 # etcd_next_ver: 3.u.v
 docker_ver: docker-engine-1.13.0-1.el7.centos
 apiserver_count: 3

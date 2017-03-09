@@ -2,3 +2,8 @@
   hosts: servers
   roles:
     - common
+  pre_tasks:
+    - name: waiting for host to come online
+      local_action: wait_for host={{ hostvars[inventory_hostname]['ansible_host'] }}
+                state=started port=22
+      become: false
