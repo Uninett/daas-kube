@@ -30,11 +30,3 @@ if [ ! -x ./tls/bin/cfssl -o ! -x ./tls/bin/cfssljson ]; then
 fi
 
 ./tls/init_cas.sh
-
-gpfs_installer="Spectrum_Scale_Advanced-4.2.2.1-x86_64-Linux-install"
-gpfs_dir="roles/gpfs/files"
-if [ ! -f $gpfs_dir/$gpfs_installer ]
-then
-    echo "$gpfs_installer not found in $gpfs_dir"
-    exit 1
-fi
