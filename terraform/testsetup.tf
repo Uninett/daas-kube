@@ -31,6 +31,7 @@ resource "openstack_compute_instance_v2" "master" {
         "${openstack_networking_secgroup_v2.ssh_access.id}",
         "${openstack_networking_secgroup_v2.kube_master.id}",
     ]
+    user_data = "#cloud-config\nhostname: ${var.cluster_name}-master-${count.index}\n"
 
     #   Connecting to the set network with the provided floating ip.
     network {
@@ -74,6 +75,7 @@ resource "openstack_compute_instance_v2" "worker" {
         "${openstack_networking_secgroup_v2.ssh_access.id}",
         "${openstack_networking_secgroup_v2.kube_lb.id}",
     ]
+    user_data = "#cloud-config\nhostname: ${var.cluster_name}-worker-${count.index}\n"
 
     #   Connecting to the set network with the provided floating ip.
     network {
