@@ -23,13 +23,13 @@
   changed_when: False
   failed_when: False
   register: check_vg_exists
-- name: Configuring LVM to use /dev/vdb
+- name: Configuring LVM to use {{ provision_lvm_device }}
   command: "{{ item }}"
   with_items:
-  - parted /dev/vdb mklabel gpt
-  - parted /dev/vdb mkpart gentoo ext2 1 -- -1
-  - parted /dev/vdb set 1 lvm on
-  - pvcreate /dev/vdb1
-  - vgcreate vg /dev/vdb1
+  - parted {{ provision_lvm_device }} mklabel gpt
+  - parted {{ provision_lvm_device }} mkpart gentoo ext2 1 -- -1
+  - parted {{ provision_lvm_device }} set 1 lvm on
+  - pvcreate {{ provision_lvm_device }}1
+  - vgcreate vg {{ provision_lvm_device }}1
   when: check_vg_exists.rc != 0
 
