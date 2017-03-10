@@ -1,12 +1,17 @@
-- name: generate /etc/hosts
-  template:
-    src: hosts.j2
+- name: Add hosts entry for apiserver.cluster.local
+  lineinfile:
     dest: /etc/hosts
-    owner: root
-    group: root
-    mode: 0644
-  register: hosts_updated
+    regexp: '\s+apiserver.cluster.local(\s|$)'
+    line: '127.0.0.1   apiserver.cluster.local'
+  register: hosts_apiserver_updated
+- name: Add hosts entries for nodes
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '\s+{{ item }}(\s|$)'
+    line: '{{ hostvars[item]["ansible_default_ipv4"]["address"] }}  {{ item }}.node.cluster.local {{ item }}'
+  with_items: '{{ play_hosts }}'
+  register: hosts_node_updated
 - name: Reload facts
   setup:
     gather_subset=network
-  when: hosts_updated.changed
+  when: hosts_apiserver_updated.changed or hosts_node_updated.changed
