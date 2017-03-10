@@ -1,5 +1,6 @@
 - include: hosts.yaml
 - include: hostname.yaml
+- include: socat.yaml
 # - include: yum.yaml
 - include: lvm.yaml
   when: provision_lvm_device is defined

@@ -10,9 +10,6 @@
   setup:
     gather_subset=network
   when: hosts_updated.changed
-- name: Install socat
-  yum:
-    name: socat
 - name: Install python-docker-py
   yum:
     name: python-docker-py
