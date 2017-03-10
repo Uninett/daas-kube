@@ -10,6 +10,3 @@
   setup:
     gather_subset=network
   when: hosts_updated.changed
-- name: Install python-docker-py
-  yum:
-    name: python-docker-py
