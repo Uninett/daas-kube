@@ -8,7 +8,7 @@
   lineinfile:
     dest: /etc/hosts
     regexp: '\s+{{ item }}(\s|$)'
-    line: '{{ hostvars[item]["ansible_default_ipv4"]["address"] }}  {{ item }}.node.cluster.local {{ item }}'
+    line: '{{ hostvars[item]["public_ip"] }}  {{ item }}.node.cluster.local {{ item }}'
   with_items: '{{ play_hosts }}'
   register: hosts_node_updated
 - name: Reload facts
