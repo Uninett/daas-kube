@@ -1,4 +1,4 @@
-- name: Work arond docker blocking IP forwarding
+- name: Work aruond docker blocking IP forwarding
   sysctl:
     name: net.ipv4.ip_forward
     value: 1
