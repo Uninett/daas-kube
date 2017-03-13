@@ -31,7 +31,7 @@
     description: Zabbix repository
     baseurl: https://repo.zabbix.com/zabbix/3.2/rhel/7/x86_64/
     gpgcheck: yes
-    gpgkey: https://repo.zabbix.com/RPM-GPG-KEY-ZABBIX-79EA5ED4
+    gpgkey: https://repo.zabbix.com/RPM-GPG-KEY-ZABBIX-A14FE591
 - name: Install Zabbix agent
   yum:
     name: zabbix-agent
