@@ -8,11 +8,11 @@ if [ $# -ne 3 ]; then
 fi
 
 if [ -z "$CPU" ]; then
-	CPU="512m"
+	CPU="256m"
 fi
 
 if [ -z "$MEMORY" ]; then
-	MEMORY="1G"
+	MEMORY="512Mi"
 fi
 
 if [ -z "$IMAGE" ]; then
@@ -41,7 +41,7 @@ kubectl apply --record --filename=- <<EOF
 apiVersion: v1
 kind: Secret
 metadata:
-  name: $APPNAME
+  name: $NAMESPACE-$APPNAME
   namespace: mysql
 type: Opaque
 data:
@@ -52,23 +52,23 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: $APPNAME
+  name: $NAMESPACE-$APPNAME
   namespace: mysql
   labels:
-    app: $APPNAME
+    app: $NAMESPACE-$APPNAME
 spec:
   ports:
   - port: 3306
     name: mysql
   selector:
-    app: $APPNAME
+    app: $NAMESPACE-$APPNAME
 
 ---
 
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: $APPNAME
+  name: $NAMESPACE-$APPNAME
   namespace: mysql
 data:
   mysql.cnf:  |-
@@ -96,19 +96,18 @@ data:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: $APPNAME
+  name: $NAMESPACE-$APPNAME
   namespace: mysql
   labels:
-    app: $APPNAME
+    app: $NAMESPACE-$APPNAME
 spec:
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: $APPNAME
+        app: $NAMESPACE-$APPNAME
     spec:
-      nodeName: gurvin-worker-2
       containers:
       - name: mysql
         image: $IMAGE
@@ -121,10 +120,10 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: $APPNAME
+              name: $NAMESPACE-$APPNAME
               key: MYSQL_ROOT_PASSWORD
         - name: SERVICE_NAME
-          value: $APPNAME
+          value: $NAMESPACE-$APPNAME
         - name: POD_NAMESPACE
           valueFrom:
             fieldRef:
@@ -167,7 +166,7 @@ spec:
             claimName: $PVCNAME
         - name: mysql-config
           configMap:
-            name: $APPNAME
+            name: $NAMESPACE-$APPNAME
             items:
             - key: mysql.cnf
               path: mysql.cnf
@@ -177,22 +176,22 @@ apiVersion: extensions/v1beta1
 kind: NetworkPolicy
 metadata:
   namespace: mysql
-  name: $APPNAME
+  name: $NAMESPACE-$APPNAME
 spec:
   podSelector:
     matchLabels:
-      app: $APPNAME
+      app: $NAMESPACE-$APPNAME
   ingress:
     - from:
       - namespaceSelector:
           matchLabels:
-            app: $APPNAME
+            name: $NAMESPACE
       ports:
         - protocol: tcp
           port: 3306
 EOF
 
-echo "Waiting for Mysql Database for $APPNAME to come up"
-kubectl  -n mysql rollout status -w deployment/$APPNAME
-POD=$(kubectl -n mysql get po -l app=$APPNAME -o=jsonpath='{.items[*].metadata.name}')
+echo "Waiting for Mysql Database for $NAMESPACE-$APPNAME to come up"
+kubectl  -n mysql rollout status -w deployment/$NAMESPACE-$APPNAME
+POD=$(kubectl -n mysql get po -l app=$NAMESPACE-$APPNAME -o=jsonpath='{.items[*].metadata.name}')
 kubectl -n mysql exec $POD /usr/local/bin/create_db.sh $NAMESPACE $APPNAME

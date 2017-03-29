@@ -28,7 +28,7 @@ metadata:
   name: $VOLUMENAME
 spec:
   capacity:
-    storage: 50Gi
+    storage: 42Gi
   accessModes:
     - $RWMODE
   hostPath:
@@ -49,5 +49,5 @@ spec:
   volumeName: $VOLUMENAME
   resources:
     requests:
-      storage: 50Gi
+      storage: 42Gi
 EOF
