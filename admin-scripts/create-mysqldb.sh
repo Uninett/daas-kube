@@ -79,17 +79,17 @@ data:
     tmpdir = /tmp
     skip-name-resolve
     innodb_buffer_pool_size = 1073741824
-    innodb_log_file_size = 256M
+    innodb_log_file_size = 128M
     innodb_fast_shutdown = 0
     expire_logs_days = 10
     key_buffer_size = 16M
     log-error = /var/log/mysql/error.log
-    max_allowed_packet = 64M
+    max_allowed_packet = 32M
     max_connect_errors = 50
     max_connections = 256
     thread_cache_size = 8
     thread_stack = 256K
-    innodb_io_capacity = 100
+    innodb_io_capacity = 150
 
 ---
 
