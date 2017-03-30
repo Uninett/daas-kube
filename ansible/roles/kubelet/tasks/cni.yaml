@@ -5,6 +5,7 @@
     owner: root
     group: root
     mode: 0755
+    setype: svirt_sandbox_file_t
 - name: Create cni binary folder
   file:
     path: /opt/cni/bin
@@ -12,6 +13,7 @@
     owner: root
     group: root
     mode: 0755
+    setype: svirt_sandbox_file_t
 - name: Install CNI
   shell: curl -sSL 'https://github.com/containernetworking/cni/releases/download/v0.4.0/cni-amd64-v0.4.0.tgz' | tar --extract --gzip --directory /opt/cni/bin
   args:

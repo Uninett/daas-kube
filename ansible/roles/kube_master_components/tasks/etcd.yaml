@@ -51,6 +51,7 @@
     owner: root
     group: root
     mode: 0755
+    setype: svirt_sandbox_file_t
 - name: Make etcd backups folder
   file:
     state: directory
@@ -58,6 +59,7 @@
     owner: root
     group: root
     mode: 0755
+    setype: svirt_sandbox_file_t
 - name: Add Etcd manifest
   template:
     src: etcd.yaml.j2
