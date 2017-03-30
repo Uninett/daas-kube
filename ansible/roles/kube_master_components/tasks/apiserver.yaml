@@ -80,3 +80,11 @@
     group: root
     mode: 0644
   tags: k8s_upgrade
+- name: Make API server auditlog folder
+  file:
+    state: directory
+    path: /var/log/apiserver
+    owner: root
+    group: root
+    mode: 0755
+    setype: svirt_sandbox_file_t
