@@ -21,7 +21,7 @@ else
 fi
 
 echo "Creating Volume: $VOLUMENAME with Path: $VOLUMEPATH to be accessible in Namespace: $NAMEPSACE using Volume Claim: $PVCNAME"
-kubectl apply --record --filename=- <<EOF
+kubectl --kubeconfig=../ansible/kubeconfig apply --record --filename=- <<EOF
 apiVersion: v1
 kind: PersistentVolume
 metadata:

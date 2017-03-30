@@ -39,3 +39,7 @@
   command: kubectl --kubeconfig kubeconfig apply -f ./cluster_config/podsecuritypolicy.yaml
 - name: Apply configuration files
   command: kubectl --kubeconfig kubeconfig apply -f ./cluster_config
+- name: Create MySQL namespace
+  local_action: command ../admin-scripts/create_namespace.sh mysql nird-sp 8 16
+- name: Create PostgreSQL namespace
+  local_action: command ../admin-scripts/create_namespace.sh pgsql nird-sp 12 24
