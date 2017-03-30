@@ -8,15 +8,15 @@
   lineinfile:
     dest: /etc/hosts
     regexp: '\d+\.\d+.*\s+{{ item }}(\s|$)'
-    line: '{{ hostvars[item]["public_ip"] }}  {{ item }}.{{ fqdn_node_domain }} {{ item }}'
+    line: '{{ hostvars[item]["ansible_default_ipv4"]["address"] }}  {{ item }}.{{ fqdn_node_domain }} {{ item }}'
   with_items: '{{ play_hosts }}'
   register: hosts_node_ipv4_updated
 - name: Add IPv6 hosts entries for nodes
   lineinfile:
     dest: /etc/hosts
     regexp: '.+:.+\s+{{ item }}(\s|$)'
-    line: '{{ hostvars[item]["public_ipv6"] }}  {{ item }}.{{ fqdn_node_domain }} {{ item }}'
-  when: '"public_ipv6" in hostvars[item]'
+    line: '{{ hostvars[item]["ansible_default_ipv6"]["address"] }}  {{ item }}.{{ fqdn_node_domain }} {{ item }}'
+  when: '"address" in hostvars[item]["ansible_default_ipv6"]'
   with_items: '{{ play_hosts }}'
   register: hosts_node_ipv6_updated
 - name: Reload facts
