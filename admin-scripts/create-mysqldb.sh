@@ -37,7 +37,7 @@ else
   SECRET=$(cat /proc/sys/kernel/random/uuid | base64)
 fi
 
-kubectl apply --record --filename=- <<EOF
+kubectl --kubeconfig=../ansible/kubeconfig apply --record --filename=- <<EOF
 apiVersion: v1
 kind: Secret
 metadata:
@@ -192,6 +192,6 @@ spec:
 EOF
 
 echo "Waiting for Mysql Database for $NAMESPACE-$APPNAME to come up"
-kubectl  -n mysql rollout status -w deployment/$NAMESPACE-$APPNAME
-POD=$(kubectl -n mysql get po -l app=$NAMESPACE-$APPNAME -o=jsonpath='{.items[*].metadata.name}')
-kubectl -n mysql exec $POD /usr/local/bin/create_db.sh $NAMESPACE $APPNAME
+kubectl  --kubeconfig=../ansible/kubeconfig -n mysql rollout status -w deployment/$NAMESPACE-$APPNAME
+POD=$(kubectl --kubeconfig=../ansible/kubeconfig -n mysql get po -l app=$NAMESPACE-$APPNAME -o=jsonpath='{.items[*].metadata.name}')
+kubectl --kubeconfig=../ansible/kubeconfig -n mysql exec $POD /usr/local/bin/create_db.sh $NAMESPACE $APPNAME
