@@ -20,6 +20,9 @@ else
 	PVCNAME=$(cat /proc/sys/kernel/random/uuid | tr A-Z a-z )
 fi
 
+echo "Making sure container can access the volume with SELinux enabled by running this command on storage server"
+echo "chcon -Rt svirt_sandbox_file_t $VOLUMEPATH"
+
 echo "Creating Volume: $VOLUMENAME with Path: $VOLUMEPATH to be accessible in Namespace: $NAMEPSACE using Volume Claim: $PVCNAME"
 kubectl --kubeconfig=../ansible/kubeconfig apply --record --filename=- <<EOF
 apiVersion: v1

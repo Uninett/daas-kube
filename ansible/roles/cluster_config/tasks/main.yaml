@@ -40,6 +40,6 @@
 - name: Apply configuration files
   command: kubectl --kubeconfig kubeconfig apply -f ./cluster_config
 - name: Create MySQL namespace
-  local_action: command ../admin-scripts/create_namespace.sh mysql nird-sp 8 16
+  local_action: command ../admin-scripts/create_namespace.sh mysql nird-sp 8 16Gi
 - name: Create PostgreSQL namespace
-  local_action: command ../admin-scripts/create_namespace.sh pgsql nird-sp 12 24
+  local_action: command ../admin-scripts/create_namespace.sh pgsql nird-sp 12 24Gi
