@@ -1,0 +1,2 @@
+lvm_volume_group: vg
+fqdn_node_domain: node.cluster.local

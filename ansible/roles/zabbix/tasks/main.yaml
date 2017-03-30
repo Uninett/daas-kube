@@ -15,7 +15,7 @@
   changed_when: False
   failed_when: False
   register: check_zabbix_agent_policy
-- name: Install Zabbix agent SELinux policy is installed
+- name: Install Zabbix agent SELinux policy
   command: sh -c 'checkmodule -m zabbix_agent_setrlimit.te -o zabbix_agent_setrlimit.mod && semodule_package -m zabbix_agent_setrlimit.mod -o zabbix_agent_setrlimit.pp && semodule -i zabbix_agent_setrlimit.pp && rm zabbix_agent_setrlimit.mod zabbix_agent_setrlimit.pp'
   args:
     chdir: /etc/zabbix

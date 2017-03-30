@@ -1,0 +1,3 @@
+- name: Install python-docker-py
+  yum:
+    name: python-docker-py

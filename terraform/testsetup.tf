@@ -31,6 +31,7 @@ resource "openstack_compute_instance_v2" "master" {
         "${openstack_networking_secgroup_v2.ssh_access.id}",
         "${openstack_networking_secgroup_v2.kube_master.id}",
     ]
+    user_data = "#cloud-config\nhostname: ${var.cluster_name}-master-${count.index}\n"
 
     #   Connecting to the set network with the provided floating ip.
     network {
@@ -74,6 +75,7 @@ resource "openstack_compute_instance_v2" "worker" {
         "${openstack_networking_secgroup_v2.ssh_access.id}",
         "${openstack_networking_secgroup_v2.kube_lb.id}",
     ]
+    user_data = "#cloud-config\nhostname: ${var.cluster_name}-worker-${count.index}\n"
 
     #   Connecting to the set network with the provided floating ip.
     network {
@@ -109,7 +111,7 @@ data "template_file" "masters_ansible" {
 }
 
 data "template_file" "workers_ansible" {
-    template = "$${name} ansible_host=$${ip} lb=$${lb_flag}"
+    template = "$${name} ansible_host=$${ip} public_ip=$${ip} lb=$${lb_flag}"
     count = "${var.worker_count}"
     vars {
         name  = "${element(openstack_compute_instance_v2.worker.*.name, count.index)}"
@@ -122,7 +124,7 @@ data "template_file" "inventory_tail" {
     template = "$${section_children}\n$${section_vars}"
     vars = {
         section_children = "[servers:children]\nmasters\nworkers"
-        section_vars = "[servers:vars]\nansible_ssh_user=centos\n[all]\ncluster\n[all:children]\nservers\n[all:vars]\ncluster_name=${var.cluster_name}\ncluster_dns_domain=${var.cluster_dns_domain}\n"
+        section_vars = "[servers:vars]\nansible_ssh_user=centos\n[all]\ncluster\n[all:children]\nservers\n[all:vars]\ncluster_name=${var.cluster_name}\ncluster_dns_domain=${var.cluster_dns_domain}\nprovision_lvm_device=/dev/vdb"
     }
 }
 

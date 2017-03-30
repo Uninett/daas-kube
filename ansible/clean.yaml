@@ -1,0 +1,90 @@
+- name: Remove up ansible configuration of nodes
+  hosts: servers
+  tasks:
+    - name: Stop kubelet
+      service:
+        name: kubelet
+        state: stopped
+        enabled: no
+      failed_when: False
+    - name: Stop Docker
+      service:
+        name: docker
+        state: stopped
+        enabled: no
+      failed_when: False
+    - name: Remove kubelet service
+      file:
+        path: /etc/systemd/system/kubelet.service
+        state: absent
+    - name: Remove /etc/kubernetes configuration
+      file:
+        path: /etc/kubernetes
+        state: absent
+    - name: Remove /etc/cni configuration
+      file:
+        path: /etc/cni
+        state: absent
+    - name: Remove /opt/kubernetes
+      file:
+        path: /opt/kubernetes
+        state: absent
+    - name: Remove /opt/cni
+      file:
+        path: /opt/cni
+        state: absent
+    - name: Uninstall Docker
+      yum:
+        name: docker-engine
+        state: absent
+    - name: Remove Docker repository
+      yum_repository:
+        name: dockerrepo
+        state: absent
+    - name: Remove Docker configuration
+      file:
+        path: /etc/docker
+        state: absent
+    - name: Check if docker thin-pool exists
+      command: 'lvdisplay {{ lvm_volume_group }}/docker'
+      changed_when: False
+      failed_when: False
+      register: check_thinpool_exists
+    - name: Remove Docker thinpool
+      command: 'lvremove -f {{ lvm_volume_group }}/docker'
+      when: check_thinpool_exists.rc == 0
+    - name: Remove /etc/ssl/etcd
+      file:
+        path: /etc/ssl/etcd
+        state: absent
+    - name: Remove /var/lib/etcd
+      file:
+        path: /var/lib/etcd
+        state: absent
+    - name: Remove /var/backups/etcd
+      file:
+        path: /var/backups/etcd
+        state: absent
+    - name: Stop zabbix
+      service:
+        name: zabbix-agent
+        state: stopped
+        enabled: no
+      failed_when: False
+    - name: Uninstall Zabbix
+      yum:
+        name: zabbix-agent
+        state: absent
+    - name: Remove Zabbix repository
+      yum_repository:
+        name: zabbix
+        state: absent
+    - name: Clear iptables rules
+      command: sh -c 'iptables -t nat -F; iptables -t nat -X; iptables -F; iptables -X'
+    - name: Remove sysctl setting for net.ipv4.ip_forward
+      sysctl:
+        name: net.ipv4.ip_forward
+        state: absent
+        sysctl_file: /etc/sysctl.d/00-forwarding.conf
+    - name: Make sure net.ipv4.ip_forward is set to 0
+      command: sysctl net.ipv4.ip_forward=0
