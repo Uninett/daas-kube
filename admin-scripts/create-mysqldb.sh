@@ -113,6 +113,8 @@ spec:
         image: $IMAGE
         imagePullPolicy: Always
         env:
+        - name: LOCKDIR
+          value: /var/lib/mysql/heartbeat
         - name: UID
           value: "$MYSQL_UID"
         - name: GID
