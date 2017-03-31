@@ -16,7 +16,7 @@ if [ -z "$MEMORY" ]; then
 fi
 
 if [ -z "$IMAGE" ]; then
-	IMAGE="gurvin/mysql:5.7.16"
+	IMAGE="registry.uninett.no/public/mysql:5.17.7-uninett1"
 fi
 
 if [ -z "$MYSQL_UID" ]; then
