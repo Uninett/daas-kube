@@ -48,9 +48,6 @@ spec:
     - mountPath: /etc/kubernetes/ssl
       name: ssl-certs-kubernetes
       readOnly: true
-    - mountPath: /etc/ssl/certs
-      name: ssl-certs-host
-      readOnly: true
     - mountPath: /etc/ssl/etcd
       name: ssl-certs-etcd
       readOnly: true
@@ -69,9 +66,6 @@ spec:
   - hostPath:
       path: /etc/kubernetes/ssl
     name: ssl-certs-kubernetes
-  - hostPath:
-      path: /usr/share/ca-certificates
-    name: ssl-certs-host
   - hostPath:
       path: /etc/ssl/etcd
     name: ssl-certs-etcd
