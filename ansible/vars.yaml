@@ -22,3 +22,5 @@ system_reserved_cpu: 100m
 system_reserved_memory: 150Mi
 graphite_server: 158.38.213.209
 zabbix_server: zabbix-backend.uninett.no
+oidc_issuer_url: https://test.dataporten-api.no
+oidc_client_id: xxxxx-xxxxx-xxxx-xxxxx-xxxx

@@ -1,0 +1,104 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: jwt-tokenissuer
+  namespace: kube-system
+  labels:
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "jwt-tokenissuer"
+spec:
+  ports:
+    - port: 8888
+      targetPort: 8888
+  selector:
+    app: jwt-tokenissuer
+
+----
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: jwt-tokenissuer
+  namespace: kube-system
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - hosts:
+    - auth.{{ cluster_dns_domain }}
+    secretName: jwt-tokenissuer-tls
+  rules:
+  - host: auth.{{ cluster_dns_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: jwt-tokenissuer
+          servicePort: 8888
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jwt-tokenissuer
+  namespace: kube-system
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jwt-tokenissuer
+    spec:
+      containers:
+      - name: jwt-tokenissuer
+        image: gurvin/jwt-tokenissuer:0.1
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 100Mi
+            cpu: 50m
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        ports:
+        - containerPort: 8888
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8888
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+        volumeMounts:
+          - name: config
+            mountPath: /config
+        volumeMounts:
+          - name: keys
+            mountPath: /keys
+      volumes:
+        - name: config
+          secret:
+            secretName: jwt-config
+        - name: keys
+          secret:
+            secretName: jwt-keys
+
+---
+
+apiVersion: extensions/v1beta1
+kind: NetworkPolicy
+metadata:
+  name: jwt-tokenissuer
+  namespace: kube-system
+spec:
+  podSelector:
+    matchLabels:
+      app: jwt-tokenissuer
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: kube-ingress
+      ports:
+        - protocol: tcp
+          port: 8888

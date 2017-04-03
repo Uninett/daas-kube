@@ -44,6 +44,9 @@ spec:
     - --audit-log-path=/var/log/apiserver/audit.log
     - --audit-log-maxage=7
     - --audit-log-maxbackup=5
+    - --oidc-groups-claim=principals
+    - --oidc-issuer-url={{ oidc_issuer_url }}
+    - --oidc-client-id={{ oidc_client_id }}
     volumeMounts:
     - mountPath: /etc/kubernetes/ssl
       name: ssl-certs-kubernetes
