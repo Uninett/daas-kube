@@ -23,7 +23,7 @@ resource "openstack_compute_instance_v2" "master" {
     count = "${var.master_count}"
     name = "${var.cluster_name}-master-${count.index}"
     region = "${var.region}"
-    image_id = "${var.centos_image}"
+    image_id = "${var.os_image}"
     flavor_name = "${var.node_flavor}"
     key_pair = "${openstack_compute_keypair_v2.keypair.name}"
     security_groups = [
@@ -44,7 +44,7 @@ resource "openstack_compute_instance_v2" "master" {
         delete_on_termination = true
         source_type = "image"
         destination_type = "local"
-        uuid = "${var.centos_image}"
+        uuid = "${var.os_image}"
     }
 
     block_device {
@@ -67,7 +67,7 @@ resource "openstack_compute_instance_v2" "worker" {
     count = "${var.worker_count}"
     name = "${var.cluster_name}-worker-${count.index}"
     region = "${var.region}"
-    image_id = "${var.centos_image}"
+    image_id = "${var.os_image}"
     flavor_name = "${var.worker_node_flavor}"
     key_pair = "${openstack_compute_keypair_v2.keypair.name}"
     security_groups = [
@@ -88,7 +88,7 @@ resource "openstack_compute_instance_v2" "worker" {
         delete_on_termination = true
         source_type = "image"
         destination_type = "local"
-        uuid = "${var.centos_image}"
+        uuid = "${var.os_image}"
     }
 
     block_device {

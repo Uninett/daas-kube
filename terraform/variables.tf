@@ -5,7 +5,7 @@ variable "tenant_name" {}
 variable "region" {}
 variable "node_flavor" {}
 variable "worker_node_flavor" {}
-variable "centos_image" {}
+variable "os_image" {}
 variable "public_v4_network" {}
 
 # From local.tfvars
