@@ -3,15 +3,7 @@
     name: net.ipv4.ip_forward
     value: 1
     sysctl_file: /etc/sysctl.d/00-forwarding.conf
-- name: Check if docker thin-pool exists
-  command: 'lvdisplay {{ lvm_volume_group }}/docker'
-  changed_when: False
-  failed_when: False
-  register: check_thinpool_exists
-- name: create docker-thinpool
-  command: lvcreate --type thin-pool -n docker -l 35%VG {{ lvm_volume_group }}
-  when: check_thinpool_exists.rc != 0
-- name: Set up Docker YUM repository
+- name: Set up Docker APT repository
   yum_repository:
     name: dockerrepo
     description: Docker Repository
@@ -19,7 +11,7 @@
     gpgcheck: yes
     gpgkey: https://yum.dockerproject.org/gpg
 - name: Install Docker
-  yum:
+  apt:
     name: "{{ docker_ver }}"
 - name: Create docker config folder
   file:

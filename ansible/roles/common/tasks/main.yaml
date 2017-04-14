@@ -2,6 +2,4 @@
 - include: hostname.yaml
 - include: socat.yaml
 - include: python_docker.yaml
-# - include: yum.yaml
-- include: lvm.yaml
-  when: provision_lvm_device is defined
+- include: apt.yaml

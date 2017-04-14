@@ -4,6 +4,6 @@
     - docker
     - kubelet
     - haproxy_apiserver
-    - zabbix
+    # - zabbix
   vars_files:
   - vars.yaml
