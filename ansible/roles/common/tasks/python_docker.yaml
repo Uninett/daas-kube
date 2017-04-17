@@ -1,3 +1,0 @@
-- name: Install python-docker-py
-  apt:
-    name: python-docker-py

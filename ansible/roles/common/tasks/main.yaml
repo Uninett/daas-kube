@@ -1,5 +1,4 @@
 - include: hosts.yaml
 - include: hostname.yaml
 - include: socat.yaml
-#- include: python_docker.yaml
 - include: upgrade.yaml
