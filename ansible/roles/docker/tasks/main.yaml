@@ -3,16 +3,31 @@
     name: net.ipv4.ip_forward
     value: 1
     sysctl_file: /etc/sysctl.d/00-forwarding.conf
-- name: Set up Docker APT repository
-  yum_repository:
-    name: dockerrepo
-    description: Docker Repository
-    baseurl: https://yum.dockerproject.org/repo/main/centos/7/
-    gpgcheck: yes
-    gpgkey: https://yum.dockerproject.org/gpg
-- name: Install Docker
+- name: Install apt-transport-https
   apt:
-    name: "{{ docker_ver }}"
+    name: apt-transport-https
+- name: Install ca-certificates
+  apt:
+    name: ca-certificates
+- name: Install curl
+  apt:
+    name: curl
+- name: Install software-properties-common
+  apt:
+    name: software-properties-common
+- name: Install python-apt
+  apt:
+    name: python-apt
+- name: Get Docker GPG Key
+  get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /tmp/docker.gpg
+- name: Add Docker GPG Key
+  command: sudo apt-key add /tmp/docker.gpg
+- name: Set up Docker APT repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    state: present
 - name: Create docker config folder
   file:
     path: /etc/docker
@@ -27,6 +42,9 @@
     owner: root
     group: root
     mode: 0644
+- name: Install Docker
+  apt:
+    name: "{{ docker_ver }}"
 - name: Start Docker service
   service:
     name: docker

@@ -34,12 +34,12 @@
         path: /opt/cni
         state: absent
     - name: Uninstall Docker
-      yum:
+      apt:
         name: docker-engine
         state: absent
     - name: Remove Docker repository
-      yum_repository:
-        name: dockerrepo
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
         state: absent
     - name: Remove Docker configuration
       file:
@@ -72,12 +72,12 @@
         enabled: no
       failed_when: False
     - name: Uninstall Zabbix
-      yum:
+      apt:
         name: zabbix-agent
         state: absent
     - name: Remove Zabbix repository
-      yum_repository:
-        name: zabbix
+      apt_repository:
+        repo: zabbix
         state: absent
     - name: Clear iptables rules
       command: sh -c 'iptables -t nat -F; iptables -t nat -X; iptables -F; iptables -X'

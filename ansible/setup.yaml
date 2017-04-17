@@ -1,7 +1,6 @@
-- name: Perform common node setup
+- name: Install python2
   hosts: servers
-  roles:
-    - common
+  gather_facts: False
   pre_tasks:
     - name: waiting for host to come online
       local_action: wait_for host={{ hostvars[inventory_hostname]['ansible_host'] }}
@@ -10,3 +9,10 @@
     - name: Ensuring that sshd is running properly
       pause:
         seconds: 5
+  tasks:
+  - name: install python 2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+- name: Perform common node setup
+  hosts: servers
+  roles:
+    - common

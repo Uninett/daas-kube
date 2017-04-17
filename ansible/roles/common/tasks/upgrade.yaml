@@ -1,0 +1,6 @@
+- name: Install aptitude
+  apt:
+    name: aptitude
+- name: upgrade all packages
+  apt:
+    upgrade: yes
