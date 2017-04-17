@@ -124,7 +124,7 @@ data "template_file" "inventory_tail" {
     template = "$${section_children}\n$${section_vars}"
     vars = {
         section_children = "[servers:children]\nmasters\nworkers"
-        section_vars = "[servers:vars]\nansible_ssh_user=centos\n[all]\ncluster\n[all:children]\nservers\n[all:vars]\ncluster_name=${var.cluster_name}\ncluster_dns_domain=${var.cluster_dns_domain}\nprovision_lvm_device=/dev/vdb"
+        section_vars = "[servers:vars]\nansible_ssh_user=ubuntu\n[all]\ncluster\n[all:children]\nservers\n[all:vars]\ncluster_name=${var.cluster_name}\ncluster_dns_domain=${var.cluster_dns_domain}\nprovision_lvm_device=/dev/vdb"
     }
 }
 
