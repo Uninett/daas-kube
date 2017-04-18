@@ -1,4 +1,4 @@
 - include: hosts.yaml
 - include: hostname.yaml
-- include: socat.yaml
+- include: packages.yaml
 - include: upgrade.yaml

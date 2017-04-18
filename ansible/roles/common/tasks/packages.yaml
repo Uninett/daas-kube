@@ -1,0 +1,9 @@
+- name: Install socat
+  apt:
+    name: socat
+- name: Install htop
+  apt:
+    name: htop
+- name: Install nano
+  apt:
+    name: nano
