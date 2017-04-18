@@ -24,3 +24,5 @@ graphite_server: 158.38.213.209
 zabbix_server: zabbix-backend.uninett.no
 oidc_issuer_url: https://test.dataporten-api.no
 oidc_client_id: xxxxx-xxxxx-xxxx-xxxxx-xxxx
+mfs_opts: mfsmaster=test.no,mfssubfolder=/test,mfspassword=test,_netdev
+mfs_state: present
