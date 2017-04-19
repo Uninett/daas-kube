@@ -2,3 +2,4 @@
 - include: hostname.yaml
 - include: packages.yaml
 - include: upgrade.yaml
+- include: sysctl.yaml
