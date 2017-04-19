@@ -1,11 +1,21 @@
 - name: Install build tools
   apt:
     name: build-essential
+  tags: gpu
 - name: Get NVIDIA Driver
   get_url:
-    url: http://us.download.nvidia.com/XFree86/Linux-x86_64/375.39/NVIDIA-Linux-x86_64-375.39.run
-    dest: /tmp/NVIDIA-Linux-x86_64-375.39.run
+    url: "http://us.download.nvidia.com/XFree86/Linux-x86_64/{{ nvidia_version }}/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run"
+    dest: /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run
+  tags: gpu
+- name: Fix NVIDIA Installer Permission
+  command: chmod +x /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run
+  tags: gpu
 - name: Install NVIDIA Driver
-  command: chmod +x /tmp/NVIDIA-Linux-x86_64-375.39.run && /tmp/NVIDIA-Linux-x86_64-375.39.run -a --ui=none --no-x-check && rm /tmp/NVIDIA-Linux-x86_64-375.39.run
+  command: /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run -a --ui=none --no-x-check
+  tags: gpu
+- name: Remove NVIDIA Driver
+  command: rm /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run
+  tags: gpu
 - name: Remove build tools
   command: apt-get remove -y --auto-remove --purge build-essential make gcc gcc-5 cpp cpp-5 binutils
+  tags: gpu
