@@ -42,6 +42,11 @@
     owner: root
     group: root
     mode: 0644
+  register: docker_svc
+- name: Insert Overlay kernel module
+  modprobe:
+    name: overlay
+    state: present
 - name: Install Docker
   apt:
     name: "{{ docker_ver }}"
@@ -50,3 +55,6 @@
     name: docker
     state: started
     enabled: true
+- name: restart docker
+  service: name=docker state=restarted enabled=yes
+  when: docker_svc.changed
