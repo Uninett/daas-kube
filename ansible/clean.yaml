@@ -71,10 +71,6 @@
       apt:
         name: zabbix-agent
         state: absent
-    - name: Remove Zabbix repository
-      apt_repository:
-        repo: https://repo.zabbix.com/zabbix/3.2/ubuntu
-        state: absent
     - name: Clear iptables rules
       command: sh -c 'iptables -t nat -F; iptables -t nat -X; iptables -F; iptables -X'
     - name: Remove sysctl setting for net.ipv4.ip_forward
