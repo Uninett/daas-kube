@@ -61,6 +61,10 @@
       file:
         path: /var/backups/etcd
         state: absent
+    - name: Remove /var/lib/kubelet
+      file:
+        path: /var/lib/kubelet
+        state: absent
     - name: Stop zabbix
       service:
         name: zabbix-agent
