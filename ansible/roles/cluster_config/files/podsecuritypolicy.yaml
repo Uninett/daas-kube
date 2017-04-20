@@ -69,6 +69,51 @@ spec:
   - 'persistentVolumeClaim'
   - 'gitRepo'
 
+---
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: elasticsearch
+  annotations:
+    seccomp.security.alpha.kubernetes.io/defaultProfileName: docker/default
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: docker/default
+spec:
+  hostPID: false
+  hostIPC: false
+  privileged: false
+  hostNetwork: false
+  allowedCapabilities:
+  - KILL
+  - CHOWN
+  - FSETID
+  - FOWNER
+  - NET_RAW
+  - SETGID
+  - SETUID
+  - SETFCAP
+  - SETPCAP
+  - DAC_OVERRIDE
+  - AUDIT_WRITE
+  - NET_BIND_SERVICE
+  - IPC_LOCK
+  - SYS_RESOURCE
+  requiredDropCapabilities:
+  - MKNOD
+  - SYS_CHROOT
+  fsGroup:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+  - 'emptyDir'
+  - 'secret'
+  - 'downwardAPI'
+  - 'configMap'
+  - 'persistentVolumeClaim'
 
 ###### Cluster Roles ########
 
@@ -102,6 +147,20 @@ rules:
   verbs:
   - use
 
+---
+apiVersion: rbac.authorization.k8s.io/v1alpha1
+kind: ClusterRole
+metadata:
+  name: elasticsearch-psp
+rules:
+- apiGroups:
+  - extensions
+  resources:
+  - podsecuritypolicies
+  resourceNames:
+  - elasticsearch
+  verbs:
+  - use
 
 ###### Cluster Role Bindings ########
 
