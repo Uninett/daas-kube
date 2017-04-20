@@ -7,7 +7,7 @@ metadata:
 ---
 
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1alpha1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: dashboard
 rules:
@@ -23,7 +23,7 @@ rules:
 ---
 
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1alpha1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: dashboard-extended
 subjects:
@@ -38,7 +38,7 @@ roleRef:
 ---
 
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1alpha1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: dashboard
 subjects:
@@ -179,5 +179,5 @@ spec:
           matchLabels:
             name: kube-ingress
       ports:
-        - protocol: tcp
+        - protocol: TCP
           port: 80
