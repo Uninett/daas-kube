@@ -19,3 +19,7 @@
 - name: Remove build tools
   command: apt-get remove -y --auto-remove --purge build-essential make gcc gcc-5 cpp cpp-5 binutils
   tags: gpu
+- name: Blacklist nouveau
+  kernel_blacklist:
+    name: nouveau
+    state: present

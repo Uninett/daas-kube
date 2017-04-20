@@ -1,0 +1,6 @@
+- name: Install GPU Driver on worker nodes
+  hosts: gpu-workers
+  roles:
+    - gpu
+  vars_files:
+  - vars.yaml
