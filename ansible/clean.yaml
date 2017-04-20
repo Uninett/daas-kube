@@ -13,6 +13,10 @@
         state: stopped
         enabled: no
       failed_when: False
+    - name: Remove Docker folder
+      file:
+        path: /var/lib/docker
+        state: absent
     - name: Remove kubelet service
       file:
         path: /etc/systemd/system/kubelet.service
@@ -45,14 +49,6 @@
       file:
         path: /etc/docker
         state: absent
-    - name: Check if docker thin-pool exists
-      command: 'lvdisplay {{ lvm_volume_group }}/docker'
-      changed_when: False
-      failed_when: False
-      register: check_thinpool_exists
-    - name: Remove Docker thinpool
-      command: 'lvremove -f {{ lvm_volume_group }}/docker'
-      when: check_thinpool_exists.rc == 0
     - name: Remove /etc/ssl/etcd
       file:
         path: /etc/ssl/etcd
@@ -77,7 +73,7 @@
         state: absent
     - name: Remove Zabbix repository
       apt_repository:
-        repo: zabbix
+        repo: https://repo.zabbix.com/zabbix/3.2/ubuntu
         state: absent
     - name: Clear iptables rules
       command: sh -c 'iptables -t nat -F; iptables -t nat -X; iptables -F; iptables -X'
