@@ -13,3 +13,8 @@
     name: kernel.kexec_load_disabled
     value: 1
     state: present
+- name: Set VM Max Map Count
+  sysctl:
+    name: vm.max_map_count
+    value: 262144
+    state: present
