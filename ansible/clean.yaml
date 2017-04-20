@@ -7,6 +7,9 @@
         state: stopped
         enabled: no
       failed_when: False
+    - name: Remove Docker containers
+      command: sh -c "docker rm -f $(docker ps -aq)"
+      ignore_errors: yes
     - name: Stop Docker
       service:
         name: docker
@@ -17,6 +20,7 @@
       file:
         path: /var/lib/docker
         state: absent
+      ignore_errors: yes
     - name: Remove kubelet service
       file:
         path: /etc/systemd/system/kubelet.service
@@ -39,7 +43,7 @@
         state: absent
     - name: Uninstall Docker
       apt:
-        name: docker-engine
+        name: docker-ce
         state: absent
     - name: Remove Docker repository
       apt_repository:
@@ -65,6 +69,7 @@
       file:
         path: /var/lib/kubelet
         state: absent
+      ignore_errors: yes
     - name: Stop zabbix
       service:
         name: zabbix-agent
