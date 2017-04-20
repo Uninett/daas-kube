@@ -18,3 +18,8 @@
     name: vm.max_map_count
     value: 262144
     state: present
+- name: Set Conntrack Count
+  sysctl:
+    name: net.netfilter.nf_conntrack_max
+    value: 1000000
+    state: present
