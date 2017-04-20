@@ -6,6 +6,6 @@
     - haproxy_apiserver
     # - zabbix
     - moosefs
-    - gpu
+    - scratch
   vars_files:
   - vars.yaml

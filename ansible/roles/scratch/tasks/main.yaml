@@ -1,0 +1,23 @@
+- name: Make Scratch folder
+  file:
+    state: directory
+    path: /scratch
+    owner: root
+    group: root
+    mode: 0777
+- name: Make Scratch LVM Volume
+  lvol:
+    lv: scratch
+    vg: "{{ lvm_vg_name }}"
+    size: "{{ scratch_size }}"
+    state: present
+- name: Make Filesystem on Scratch
+  filesystem:
+    fstype: ext4
+    dev: "/dev/mapper/{{ lvm_vg_name }}-scratch"
+- name: Mount Scratch FileSystem
+  mount:
+    name: /scratch
+    src: "/dev/mapper/{{ lvm_vg_name }}-scratch"
+    fstype: ext4
+    state: mounted
