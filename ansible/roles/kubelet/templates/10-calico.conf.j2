@@ -1,0 +1,22 @@
+{
+    "name": "k8s-pod-network",
+    "type": "calico",
+    "etcd_endpoints": "{% set comma = joiner(',') %}
+{%- for host in groups['masters'] -%}
+{{ comma() }}https://{{ host }}.node.cluster.local:2379
+{%- endfor %}",
+    "etcd_key_file": "/etc/cni/net.d/calico-tls/etcd-key",
+    "etcd_cert_file": "/etc/cni/net.d/calico-tls/etcd-cert",
+    "etcd_ca_cert_file": "/etc/cni/net.d/calico-tls/etcd-ca",
+    "log_level": "info",
+    "ipam": {
+        "type": "calico-ipam"
+    },
+    "policy": {
+        "type": "k8s",
+        "k8s_api_root": "https://{{ apiserver_service_ip }}/api/v1/"
+    },
+    "kubernetes": {
+        "kubeconfig": "/etc/cni/net.d/calico-kubeconfig"
+    }
+}
