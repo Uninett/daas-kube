@@ -65,6 +65,8 @@
       file:
         path: /var/backups/etcd
         state: absent
+    - name: Remove Kubelet mount points
+      command: sh -c "mount |cut -d' ' -f 3|grep '/var/lib/kubelet/pods'| xargs -I {} umount {}"
     - name: Remove /var/lib/kubelet
       file:
         path: /var/lib/kubelet
