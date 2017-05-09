@@ -13,14 +13,6 @@
     owner: root
     group: root
     mode: 0755
-- name: Copy calico-kubeconfig
-  when: " inventory_hostname in groups['masters']"
-  copy:
-    src: calico-kubeconfig
-    dest: /etc/cni/net.d/calico-kubeconfig
-    owner: root
-    group: root
-    mode: 0644
 - name: Copy calico etcd ca
   when: " inventory_hostname in groups['masters']"
   copy:
@@ -45,14 +37,6 @@
     owner: root
     group: root
     mode: 0644
-- name: 10-calico.conf
-  when: " inventory_hostname in groups['masters']"
-  template:
-    dest: /etc/cni/net.d/10-calico.conf
-    src: 10-calico.conf.j2
-    owner: root
-    group: root
-    mode: 0600
 - name: Create cni binary folder
   file:
     path: /opt/cni/bin
@@ -64,18 +48,6 @@
   shell: curl -sSL 'https://github.com/containernetworking/cni/releases/download/v0.5.2/cni-amd64-v0.5.2.tgz' | tar --extract --gzip --directory /opt/cni/bin
   args:
     creates: /opt/cni/bin/loopback
-- name: Install calico
-  when: " inventory_hostname in groups['masters']"
-  get_url:
-    url: "https://github.com/projectcalico/cni-plugin/releases/download/v{{ calico_cni_ver }}/calico"
-    dest: /opt/cni/bin/calico
-    mode: 0755
-- name: Install calico-ipam
-  when: " inventory_hostname in groups['masters']"
-  get_url:
-    url: "https://github.com/projectcalico/cni-plugin/releases/download/v{{ calico_cni_ver }}/calico-ipam"
-    dest: /opt/cni/bin/calico-ipam
-    mode: 0755
 - name: Create kubernetes directory
   file:
     path: /opt/kubernetes
