@@ -12,22 +12,6 @@
 - name: Install curl
   apt:
     name: curl
-- name: Install software-properties-common
-  apt:
-    name: software-properties-common
-- name: Install python-apt
-  apt:
-    name: python-apt
-- name: Get Docker GPG Key
-  get_url:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    dest: /tmp/docker.gpg
-- name: Add Docker GPG Key
-  command: sudo apt-key add /tmp/docker.gpg
-- name: Set up Docker APT repository
-  apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
-    state: present
 - name: Create docker config folder
   file:
     path: /etc/docker
