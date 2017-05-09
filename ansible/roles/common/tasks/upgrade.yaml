@@ -1,3 +1,5 @@
+- name: Auto remove old packages
+  command: apt-get -y autoremove
 - name: Install aptitude
   apt:
     name: aptitude
