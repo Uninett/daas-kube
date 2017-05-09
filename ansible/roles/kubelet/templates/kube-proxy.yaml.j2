@@ -16,6 +16,7 @@ spec:
     - proxy
     - --kubeconfig=/etc/kubernetes/kubeconfig.yaml
     - --proxy-mode=iptables
+    - --hostname-override={{ inventory_hostname }}
     securityContext:
       privileged: true
     volumeMounts:
