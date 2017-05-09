@@ -350,7 +350,7 @@ spec:
       hostNetwork: true
       containers:
         - name: calico-policy-controller
-          image: calico/kube-policy-controller:v0.5.4
+          image: calico/kube-policy-controller:v{{ calico_k8s_policy_ver }}
           resources:
             limits:
               memory: 200Mi
