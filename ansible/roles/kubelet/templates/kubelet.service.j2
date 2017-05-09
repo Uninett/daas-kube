@@ -3,6 +3,7 @@ ExecStart=/opt/kubernetes/kubelet-{{ k8s_ver }} \
   --kubeconfig=/etc/kubernetes/kubeconfig.yaml \
   --require-kubeconfig \
   --network-plugin=cni \
+  --enable-cri=false \
 {% if inventory_hostname in groups['masters'] %}
   --register-schedulable=false \
 {% endif %}
