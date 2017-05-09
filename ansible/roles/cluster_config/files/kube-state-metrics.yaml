@@ -16,6 +16,7 @@ rules:
     resources:
     - nodes
     - pods
+    - resourcequotas
     verbs:
     - get
     - list
@@ -24,6 +25,8 @@ rules:
     - extensions
     resources:
     - deployments
+    - daemonsets
+    - replicasets
     verbs:
     - get
     - list
