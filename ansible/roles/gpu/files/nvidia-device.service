@@ -3,6 +3,7 @@ Description=Enable NVIDIA Devices on system
 
 [Service]
 ExecStartPre=/usr/bin/nvidia-smi
+ExecStartPre=/usr/bin/nvidia-persistenced
 ExecStartPre=/sbin/modprobe nvidia-uvm
 ExecStart=-/bin/sh -c "/bin/mknod -m 666 /dev/nvidia-uvm c $(grep nvidia-uvm /proc/devices | awk '{print $1}') 0"
 
