@@ -1,25 +1,58 @@
+- name: Check if have Nvidia modules already
+  command: /sbin/modprobe nvidia
+  register: nvidia
+  ignore_errors: True
+  tags: gpu
 - name: Install build tools
   apt:
     name: build-essential
+  when: nvidia|failed
   tags: gpu
 - name: Get NVIDIA Driver
   get_url:
     url: "http://us.download.nvidia.com/XFree86/Linux-x86_64/{{ nvidia_version }}/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run"
     dest: /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run
+  when: nvidia|failed
   tags: gpu
 - name: Fix NVIDIA Installer Permission
   command: chmod +x /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run
+  when: nvidia|failed
   tags: gpu
 - name: Install NVIDIA Driver
   command: /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run -a --ui=none --no-x-check
+  when: nvidia|failed
   tags: gpu
 - name: Remove NVIDIA Driver
   command: rm /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run
+  when: nvidia|failed
   tags: gpu
 - name: Remove build tools
   command: apt-get remove -y --auto-remove --purge build-essential make gcc gcc-5 cpp cpp-5 binutils
+  when: nvidia|failed
   tags: gpu
 - name: Blacklist nouveau
   kernel_blacklist:
     name: nouveau
     state: present
+  when: nvidia|failed
+  tags: gpu
+- name: Update Initramfs to comply with kernel module settings
+  command: update-initramfs -u
+  tags: gpu
+  when: nvidia|failed
+- name: Nvidia Device Service
+  copy:
+    dest: /etc/systemd/system/nvidia-device.service
+    src: nvidia-device.service
+    owner: root
+    group: root
+    mode: 0644
+  register: nvidia_svc
+  tags: gpu
+- name: Reloading systemd
+  command: systemctl daemon-reload
+  when: nvidia_svc.changed
+  tags: gpu
+- name: run nvidia-device service
+  service: name=nvidia-device state=started enabled=yes
+  tags: gpu
