@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: nvidia-drivers-{{ nvidia_version | regex_replace('(.*)\.(.*)', '\\1-\\2') }}
+  name: default-nvidia-drivers-{{ nvidia_version | regex_replace('(.*)\.(.*)', '\\1-\\2') }}
 spec:
   capacity:
     storage: 42Gi
@@ -9,12 +9,14 @@ spec:
     - ReadOnlyMany
   hostPath:
     path: /usr/local/lib/nvidia/volumes/nvidia_driver/{{ nvidia_version }}
+  claimRef:
+    namespace: default
 
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: libcuda-so-{{ nvidia_version | regex_replace('(.*)\.(.*)', '\\1-\\2') }}
+  name: default-libcuda-so-{{ nvidia_version | regex_replace('(.*)\.(.*)', '\\1-\\2') }}
 spec:
   capacity:
     storage: 42Gi
@@ -22,4 +24,6 @@ spec:
     - ReadOnlyMany
   hostPath:
     path: /usr/lib/x86_64-linux-gnu/libcuda.so.{{ nvidia_version }}
+  claimRef:
+    namespace: default
 
