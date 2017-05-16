@@ -2,7 +2,7 @@ k8s_ver: 1.6.2
 # k8s_next_ver: 1.x.y
 etcd_ver: 3.1.6
 # etcd_next_ver: 3.u.v
-docker_ver: docker.io=1.12.6-0ubuntu1~16.04.1
+docker_ver: docker-engine=1.13.1-0~ubuntu-xenial
 apiserver_count: 3
 dns_service_ip: 172.16.0.10
 service_ip_range: 172.16.0.0/16
