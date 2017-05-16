@@ -50,3 +50,20 @@
   command: dpkg -i /tmp/nvidia-docker_{{ nvidia_docker_ver }}-1_amd64.deb
   when: nvidia|failed
   tags: gpu
+- name: Fix Nvidia-Docker path issue
+  copy:
+    src: nvidia-docker.service
+    dest: /lib/systemd/system/nvidia-docker.service
+    owner: root
+    group: root
+    mode: 0644
+  when: nvidia|failed
+  tags: gpu
+- name: Reloading systemd
+  command: systemctl daemon-reload
+  when: nvidia|failed
+  tags: gpu
+- name: restart nvidia-docker
+  service: name=nvidia-docker state=restarted enabled=yes
+  when: nvidia|failed
+  tags: gpu
