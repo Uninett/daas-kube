@@ -40,19 +40,13 @@
   command: update-initramfs -u
   tags: gpu
   when: nvidia|failed
-- name: Nvidia Device Service
-  copy:
-    dest: /etc/systemd/system/nvidia-device.service
-    src: nvidia-device.service
-    owner: root
-    group: root
-    mode: 0644
-  register: nvidia_svc
+- name: Get Nvidia-Docker Volume plugin
+  get_url:
+    url: https://github.com/NVIDIA/nvidia-docker/releases/download/v{{ nvidia_docker_ver }}/nvidia-docker_{{ nvidia_docker_ver }}-1_amd64.deb
+    dest: /tmp/nvidia-docker_{{ nvidia_docker_ver }}-1_amd64.deb
+  when: nvidia|failed
   tags: gpu
-- name: Reloading systemd
-  command: systemctl daemon-reload
-  when: nvidia_svc.changed
-  tags: gpu
-- name: run nvidia-device service
-  service: name=nvidia-device state=started enabled=yes
+- name: Install Nvidia-Docker Volume plugin
+  command: dpkg -i /tmp/nvidia-docker_{{ nvidia_docker_ver }}-1_amd64.deb
+  when: nvidia|failed
   tags: gpu
