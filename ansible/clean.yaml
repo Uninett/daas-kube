@@ -1,6 +1,9 @@
 - name: Remove up ansible configuration of nodes
   hosts: servers
   tasks:
+    - name: Get Nvidia Version
+      include_vars:
+        file: vars.yaml
     - name: Stop kubelet
       service:
         name: kubelet
@@ -87,3 +90,28 @@
         sysctl_file: /etc/sysctl.d/00-forwarding.conf
     - name: Make sure net.ipv4.ip_forward is set to 0
       command: sysctl net.ipv4.ip_forward=0
+    - name: Check if have Nvidia modules already
+      command: /sbin/modprobe nvidia
+      register: nvidia
+      ignore_errors: True
+    - name: Get NVIDIA Driver
+      get_url:
+        url: "http://us.download.nvidia.com/XFree86/Linux-x86_64/{{ nvidia_version }}/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run"
+        dest: /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run
+      when: nvidia|succeeded
+      tags: gpu
+    - name: Fix NVIDIA Installer Permission
+      command: chmod +x /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run
+      when: nvidia|succeeded
+      tags: gpu
+    - name: Remove NVIDIA Drivers
+      command: /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run -a --uninstall --ui=none --no-x-check
+      when: nvidia|succeeded
+    - name: Remove Nvidia Device service
+      file:
+        path: /etc/systemd/system/nvidia-device.service
+        state: absent
+      when: nvidia|succeeded
+    - name: Remove NVIDIA Driver
+      command: rm /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run
+      when: nvidia|succeeded
