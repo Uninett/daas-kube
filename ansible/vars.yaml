@@ -30,6 +30,6 @@ nvidia_version: 375.39
 lvm_vg_name: vg
 scratch_size: 250g
 calico_ipip: "off"
-calico_node_ver: 1.1.3
-calico_cni_ver: 1.8.0
+calico_node_ver: 1.2.0
+calico_cni_ver: 1.8.3
 calico_k8s_policy_ver: 0.6.0
