@@ -33,3 +33,4 @@ calico_ipip: "off"
 calico_node_ver: 1.2.0
 calico_cni_ver: 1.8.3
 calico_k8s_policy_ver: 0.6.0
+nvidia_docker_ver: 1.0.1
