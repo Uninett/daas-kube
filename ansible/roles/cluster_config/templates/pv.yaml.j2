@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: default-nvidia-drivers-{{ nvidia_version | regex_replace('(.*)\.(.*)', '\\1-\\2') }}
+  name: default-nvidia-drivers
 spec:
   capacity:
     storage: 42Gi
@@ -16,7 +16,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: default-libcuda-so-{{ nvidia_version | regex_replace('(.*)\.(.*)', '\\1-\\2') }}
+  name: default-libcuda-so
 spec:
   capacity:
     storage: 42Gi
