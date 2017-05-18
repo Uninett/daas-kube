@@ -11,7 +11,7 @@ spec:
     path: /usr/local/lib/nvidia/volumes/nvidia_driver/{{ nvidia_version }}
   claimRef:
     namespace: default
-    name: default-nvidia-drivers
+    name: nvidia-drivers
 
 ---
 apiVersion: v1
@@ -27,5 +27,5 @@ spec:
     path: /usr/lib/x86_64-linux-gnu/libcuda.so.{{ nvidia_version }}
   claimRef:
     namespace: default
-    name: default-libcuda-so
+    name: libcuda-so
 
