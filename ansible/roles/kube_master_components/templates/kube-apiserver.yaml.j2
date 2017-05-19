@@ -27,13 +27,13 @@ spec:
     - --allow-privileged=true
     - --service-cluster-ip-range={{ service_ip_range }}
     - --secure-port=8443
-    - --admission-control=NamespaceLifecycle,DenyEscalatingExec,LimitRanger,ServiceAccount,ResourceQuota,PodSecurityPolicy
+    - --admission-control=NamespaceLifecycle,DenyEscalatingExec,LimitRanger,ServiceAccount,ResourceQuota,PodSecurityPolicy,PodPreset
     - --tls-cert-file=/etc/kubernetes/ssl/node.pem
     - --tls-private-key-file=/etc/kubernetes/ssl/node-key.pem
     - --client-ca-file=/etc/kubernetes/ssl/ca.pem
     - --service-account-key-file=/etc/kubernetes/service-key.pem
     - --service-account-lookup=true
-    - --runtime-config=extensions/v1beta1=true,extensions/v1beta1/networkpolicies=true,rbac.authorization.k8s.io/v1beta1=true,extensions/v1beta1/podsecuritypolicy=true
+    - --runtime-config=extensions/v1beta1=true,extensions/v1beta1/networkpolicies=true,rbac.authorization.k8s.io/v1beta1=true,extensions/v1beta1/podsecuritypolicy=true,settings.k8s.io/v1alpha1/podpreset=true
     - --feature-gates=Accelerators=true,ExperimentalCriticalPodAnnotation=true,TaintBasedEvictions=true
     - --authorization-mode=RBAC
     - --storage-backend=etcd3
