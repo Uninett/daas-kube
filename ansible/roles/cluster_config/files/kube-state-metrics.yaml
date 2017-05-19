@@ -17,6 +17,9 @@ rules:
     - nodes
     - pods
     - resourcequotas
+    - services
+    - limitranges
+    - replicationcontrollers
     verbs:
     - get
     - list
