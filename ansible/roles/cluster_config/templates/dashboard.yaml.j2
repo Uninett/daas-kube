@@ -61,6 +61,7 @@ metadata:
     app: dashboard
     kubernetes.io/cluster-service: "true"
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: dashboard
