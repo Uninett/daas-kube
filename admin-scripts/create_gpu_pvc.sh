@@ -16,7 +16,7 @@ kubectl --kubeconfig=../ansible/kubeconfig apply --record --filename=- <<EOF
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: $NAMESPACE-nvidia-driver
+  name: $NAMESPACE-nvidia-driver-$NVIDIA_VERSION
 spec:
   capacity:
     storage: 42Gi
@@ -26,13 +26,13 @@ spec:
     path: /usr/local/lib/nvidia/volumes/nvidia_driver/$NVIDIA_VERSION
   claimRef:
     namespace: $NAMESPACE
-    name: nvidia-driver
+    name: nvidia-driver-$NVIDIA_VERSION
 
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: $NAMESPACE-libcuda-so
+  name: $NAMESPACE-libcuda-so-$NVIDIA_VERSION
 spec:
   capacity:
     storage: 42Gi
@@ -42,19 +42,19 @@ spec:
     path: /usr/lib/x86_64-linux-gnu/libcuda.so.$NVIDIA_VERSION
   claimRef:
     namespace: $NAMESPACE
-    name: libcuda-so
+    name: libcuda-so-$NVIDIA_VERSION
 
 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nvidia-driver
+  name: nvidia-driver-$NVIDIA_VERSION
   namespace: $NAMESPACE
 spec:
   accessModes:
     - ReadOnlyMany
-  volumeName: $NAMESPACE-nvidia-driver
+  volumeName: $NAMESPACE-nvidia-driver-$NVIDIA_VERSION
   resources:
     requests:
       storage: 42Gi
@@ -63,12 +63,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: libcuda-so
+  name: libcuda-so-$NVIDIA_VERSION
   namespace: $NAMESPACE
 spec:
   accessModes:
     - ReadOnlyMany
-  volumeName: $NAMESPACE-libcuda-so
+  volumeName: $NAMESPACE-libcuda-so-$NVIDIA_VERSION
   resources:
     requests:
       storage: 42Gi
@@ -93,10 +93,10 @@ spec:
   volumes:
   - name: nvidia-driver
     persistentVolumeClaim:
-      claimName: nvidia-driver
+      claimName: nvidia-driver-$NVIDIA_VERSION
   - name: libcuda-so
     persistentVolumeClaim:
-      claimName: libcuda-so
+      claimName: libcuda-so-$NVIDIA_VERSION
 EOF
 
 echo "Successfully created PV, PVC and PodPreset for namespace: $NAMESPACE"
