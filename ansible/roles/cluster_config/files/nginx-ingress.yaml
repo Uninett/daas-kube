@@ -142,6 +142,8 @@ metadata:
   labels:
     app: nginx-ingress-lb
 spec:
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
