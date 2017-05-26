@@ -22,7 +22,7 @@
   command: /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run -a --ui=none --no-x-check
   when: nvidia|failed
   tags: gpu
-- name: Remove NVIDIA Driver
+- name: Remove NVIDIA Installer
   command: rm /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run
   when: nvidia|failed
   tags: gpu
@@ -65,5 +65,9 @@
   tags: gpu
 - name: restart nvidia-docker
   service: name=nvidia-docker state=restarted enabled=yes
+  when: nvidia|failed
+  tags: gpu
+- name: Run test nvidia-docker
+  command: nvidia-docker run --rm nvidia/cuda nvidia-smi
   when: nvidia|failed
   tags: gpu

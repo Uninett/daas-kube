@@ -26,7 +26,7 @@ oidc_issuer_url: https://test.dataporten-api.no
 oidc_client_id: xxxxx-xxxxx-xxxx-xxxxx-xxxx
 mfs_opts: mfsmaster=test.no,mfssubfolder=/test,mfspassword=test,_netdev
 mfs_state: present
-nvidia_version: 375.39
+nvidia_version: 375.66
 lvm_vg_name: vg
 scratch_size: 250g
 calico_ipip: "off"

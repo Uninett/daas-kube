@@ -4,7 +4,7 @@ set -o pipefail
 
 if [ $# -ne 2 ]; then
 	echo "Usage: $0 namespace nvidia_version"
-	echo "Example: $0 test 375.39"
+	echo "Example: $0 test 375.66"
 	exit 1
 fi
 
