@@ -34,18 +34,22 @@ echo "3. ServiceAccount (A service account name)"
 echo -n "Specify Subject type (1,2 or 3): "
 read SUBJECTTYPE
 
+TYPENAME=""
 if [ $SUBJECTTYPE -eq 1 ]; then
 	SUBJECTTYPE="User"
+  TYPENAME="user"
 elif [ $SUBJECTTYPE -eq 2 ]; then
 	SUBJECTTYPE="Group"
+  TYPENAME="group"
 elif [ $SUBJECTTYPE -eq 3 ]; then
 	SUBJECTTYPE="ServiceAccount"
+  TYPENAME="sa"
 else
 	echo "Unknown Subject type"
 	exit 1
 fi
 
-BINDNAME="$NAMESPACE-$ROLENAME-"$(echo -n $ROLETYPE | tr A-Z a-z)
+BINDNAME="$NAMESPACE-$ROLENAME-$(echo -n $ROLETYPE | tr A-Z a-z)-$TYPENAME"
 
 echo "\"$BINDNAME\" is of which binding type:"
 echo "1. ClusterRoleBinding (it binds the given subject to given role in **whole cluster across namespaces**)"
