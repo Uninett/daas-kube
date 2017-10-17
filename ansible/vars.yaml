@@ -1,4 +1,4 @@
-k8s_ver: 1.7.12
+k8s_ver: 1.8.6
 # k8s_next_ver: 1.x.y
 etcd_ver: 3.2.13
 # etcd_next_ver: 3.u.v
@@ -32,5 +32,5 @@ scratch_size: 250g
 calico_ipip: "off"
 calico_node_ver: 2.6.5
 calico_cni_ver: 1.11.2
-calico_k8s_controller_ver: 1.0.0
+calico_k8s_controller_ver: 1.0.2
 nvidia_docker_ver: 1.0.1

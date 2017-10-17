@@ -49,6 +49,8 @@ spec:
     - --oidc-groups-claim=principals
     - --oidc-issuer-url={{ oidc_issuer_url }}
     - --oidc-client-id={{ oidc_client_id }}
+    - --audit-log-format=json
+    - --audit-policy-file=/etc/kubernetes/audit-policy.yaml
     volumeMounts:
     - mountPath: /etc/kubernetes/ssl
       name: ssl-certs-kubernetes
@@ -67,6 +69,8 @@ spec:
       readOnly: true
     - mountPath: /var/log/apiserver
       name: apiserver-auditlog
+    - mountPath: /etc/kubernetes/audit-policy.yaml
+      name: apiserver-audit-policy
   volumes:
   - hostPath:
       path: /etc/kubernetes/ssl
@@ -77,6 +81,9 @@ spec:
   - hostPath:
       path: /etc/kubernetes/service-key.pem
     name: kubernetes-service-key
+  - hostPath:
+      path: /etc/kubernetes/audit-policy.yaml
+    name: apiserver-audit-policy
   - hostPath:
       path: /etc/hosts
     name: hosts
