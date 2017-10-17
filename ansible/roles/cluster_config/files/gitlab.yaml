@@ -2,7 +2,7 @@
 # * We don't grant access to reading secrets, nor impersonating service accounts.
 # * We add access to creating ingress & networkpolicy.
 # * We add access to creating & updating secrets.
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: gitlab
@@ -128,3 +128,19 @@ rules:
       - get
       - list
       - watch
+
+---
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: gitlab
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: gitlab
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: gitlab
+  apiGroup: rbac.authorization.k8s.io

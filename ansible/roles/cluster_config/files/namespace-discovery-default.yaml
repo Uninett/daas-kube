@@ -1,5 +1,5 @@
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: namespace-list-authenticated
 rules:
@@ -14,12 +14,12 @@ rules:
 
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: namespace-list-authenticated
 subjects:
-- kind: Group
-  name: system:authenticated
+  - kind: Group
+    name: system:authenticated
 roleRef:
   kind: ClusterRole
   name: namespace-list-authenticated
@@ -27,7 +27,7 @@ roleRef:
 
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: authenticated-discovery
 subjects:
@@ -40,7 +40,7 @@ roleRef:
 
 ---
 kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: authenticated-default
   namespace: default
