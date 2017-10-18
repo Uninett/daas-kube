@@ -13,6 +13,7 @@ spec:
     - scheduler
     - --master=http://127.0.0.1:8080
     - --leader-elect=true
+    - --feature-gates=Accelerators=true,ExperimentalCriticalPodAnnotation=true,TaintBasedEvictions=true,MountPropagation=true,DevicePlugins=True,PodPriority=True
     resources:
       requests:
         cpu: {{ kube_scheduler_cpu }}
