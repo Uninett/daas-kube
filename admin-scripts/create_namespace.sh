@@ -20,13 +20,13 @@ metadata:
   labels:
     name: $NAMESPACE
     project: $PROJECT
-  annotations:
-    net.beta.kubernetes.io/network-policy: |
-      {
-        "ingress": {
-          "isolation": "DefaultDeny"
-        }
-      }
+
+---
+apiVersion: extensions/v1beta1
+kind: NetworkPolicy
+metadata:
+    name: default-deny
+    namespace: $NAMESPACE
 
 ---
 apiVersion: v1
