@@ -203,6 +203,7 @@ spec:
             - --profiling=false
             - --sort-backends
             - --enable-ssl-passthrough
+            - --annotations-prefix=ingress.kubernetes.io
 
 
 ---
