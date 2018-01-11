@@ -14,12 +14,12 @@
     name: curl
 - name: Get Docker GPG key
   get_url:
-    url: "https://yum.dockerproject.org/gpg"
+    url: "https://download.docker.com/linux/ubuntu/gpg"
     dest: /tmp/docker.gpg
 - name: Add Docker GPG key
   command: apt-key add /tmp/docker.gpg
 - name: Add Docker Repo
-  command: add-apt-repository "deb https://apt.dockerproject.org/repo/ ubuntu-xenial main"
+  command: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
 - name: Create docker config folder
   file:
     path: /etc/docker
@@ -39,12 +39,16 @@
   modprobe:
     name: overlay
     state: present
+- name: Update apt cache
+  command: apt-get update
+- name: Unpin Docker version
+  command: apt-mark unhold docker-ce
 - name: Install Docker
   apt:
     name: "{{ docker_ver }}"
-    update_cache: yes
-- name: Pin Docker
-  command: apt-mark hold docker-engine
+    force: yes
+- name: Pin Docker version
+  command: apt-mark hold docker-ce
 - name: Start Docker service
   service:
     name: docker
