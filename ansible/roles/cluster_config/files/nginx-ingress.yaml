@@ -176,10 +176,21 @@ spec:
       nodeSelector:
         lb: "true"
       containers:
-        - image: gcr.io/google_containers/nginx-ingress-controller:0.9.0
+        - image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.9.0-beta.17
           name: nginx-ingress-lb
           imagePullPolicy: Always
           livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 10254
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
             httpGet:
               path: /healthz
               port: 10254
@@ -203,8 +214,6 @@ spec:
             - --profiling=false
             - --sort-backends
             - --enable-ssl-passthrough
-            - --annotations-prefix=ingress.kubernetes.io
-
 
 ---
 
