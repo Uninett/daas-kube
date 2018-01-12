@@ -79,6 +79,7 @@
     owner: root
     group: root
     mode: 0644
+  tags: k8s_upgrade
 - name: Add apiserver manifest
   template:
     src: kube-apiserver.yaml.j2
