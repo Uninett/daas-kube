@@ -115,6 +115,51 @@ spec:
   - 'configMap'
   - 'persistentVolumeClaim'
 
+---
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: hostpid-nvidia
+  annotations:
+    seccomp.security.alpha.kubernetes.io/defaultProfileName: docker/default
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: docker/default
+spec:
+  hostPID: true
+  hostIPC: false
+  privileged: false
+  hostNetwork: false
+  allowedCapabilities:
+  - KILL
+  - CHOWN
+  - FSETID
+  - FOWNER
+  - NET_RAW
+  - SETGID
+  - SETUID
+  - SETFCAP
+  - SETPCAP
+  - DAC_OVERRIDE
+  - AUDIT_WRITE
+  - NET_BIND_SERVICE
+  requiredDropCapabilities:
+  - MKNOD
+  - SYS_CHROOT
+  fsGroup:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+  - 'emptyDir'
+  - 'secret'
+  - 'downwardAPI'
+  - 'configMap'
+  - 'persistentVolumeClaim'
+  - 'gitRepo'
+
 ###### Cluster Roles ########
 
 ---
@@ -159,6 +204,21 @@ rules:
   - podsecuritypolicies
   resourceNames:
   - elasticsearch
+  verbs:
+  - use
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: hostpid-nvidia-psp
+rules:
+- apiGroups:
+  - extensions
+  resources:
+  - podsecuritypolicies
+  resourceNames:
+  - hostpid-nvidia
   verbs:
   - use
 
