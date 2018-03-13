@@ -30,3 +30,4 @@
     mode: 0644
   tags:
     - etcd_manifest
+    - k8s_upgrade
