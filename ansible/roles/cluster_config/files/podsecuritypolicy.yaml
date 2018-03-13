@@ -50,6 +50,7 @@ spec:
   - DAC_OVERRIDE
   - AUDIT_WRITE
   - NET_BIND_SERVICE
+  - DAC_READ_SEARCH
   requiredDropCapabilities:
   - MKNOD
   - SYS_CHROOT
