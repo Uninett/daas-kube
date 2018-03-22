@@ -69,7 +69,7 @@ fi
 if [[ ("$SUBJECTTYPE" == "User" || "$SUBJECTTYPE" == "Group") && "$BINDTYPE" == "ClusterRoleBinding" ]]; then
 	cat > binding.yaml <<EOF
 kind: $BINDTYPE
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: $BINDNAME
 subjects:
@@ -84,7 +84,7 @@ EOF
 elif [[ ("$SUBJECTTYPE" == "User" || "$SUBJECTTYPE" == "Group") && "$BINDTYPE" == "RoleBinding" ]]; then
 	cat > binding.yaml <<EOF
 kind: $BINDTYPE
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: $BINDNAME
   namespace: $NAMESPACE
@@ -99,7 +99,7 @@ EOF
 elif [[ "$SUBJECTTYPE" == "ServiceAccount" && "$BINDTYPE" == "ClusterRoleBinding" ]]; then
 	cat > binding.yaml <<EOF
 kind: $BINDTYPE
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: $BINDNAME
 subjects:
@@ -114,7 +114,7 @@ EOF
 elif [[ "$SUBJECTTYPE" == "ServiceAccount" && "$BINDTYPE" == "RoleBinding" ]]; then
 	cat > binding.yaml <<EOF
 kind: $BINDTYPE
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: $BINDNAME
   namespace: $NAMESPACE
