@@ -11,6 +11,7 @@ NAMESPACE=$1
 PROJECT=$2
 CPU=$3
 MEMORY=$4
+LIMIT_CPU="$((2 * $CPU))"
 
 kubectl --kubeconfig=../ansible/kubeconfig apply --record --filename=- <<EOF
 apiVersion: v1
@@ -38,7 +39,7 @@ spec:
   hard:
     requests.cpu: "$CPU"
     requests.memory: $MEMORY
-    limits.cpu: "$CPU"
+    limits.cpu: "$LIMIT_CPU"
     limits.memory: $MEMORY
     configmaps: "100"
     services: "100"
