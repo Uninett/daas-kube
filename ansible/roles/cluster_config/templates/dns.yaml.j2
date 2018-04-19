@@ -115,17 +115,18 @@ spec:
           name: kube-dns
       containers:
       - name: kubedns
-        image: gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.2
+        image: k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.10
         resources:
           # TODO: Set memory limits when we've profiled the container for large
           # clusters, then set request = limit to keep this container in
           # guaranteed class. Currently, this container falls into the
           # "burstable" category so the kubelet doesn't backoff from restarting it.
           limits:
-            memory: 170Mi
+            cpu: 300m
+            memory: 300Mi
           requests:
-            cpu: 100m
-            memory: 70Mi
+            cpu: 300m
+            memory: 300Mi
         livenessProbe:
           httpGet:
             path: /healthcheck/kubedns
@@ -166,7 +167,7 @@ spec:
         - name: kube-dns-config
           mountPath: /kube-dns-config
       - name: dnsmasq
-        image: gcr.io/google_containers/k8s-dns-dnsmasq-amd64:1.14.2
+        image: k8s.gcr.io/k8s-dns-dnsmasq-amd64:1.14.10
         livenessProbe:
           httpGet:
             path: /healthcheck/dnsmasq
@@ -177,7 +178,8 @@ spec:
           successThreshold: 1
           failureThreshold: 5
         args:
-        - --cache-size=1000
+        - --cache-size=5000
+        - --no-negcache
         - --server=/cluster.local/127.0.0.1#10053
         - --server=/in-addr.arpa/127.0.0.1#10053
         - --server=/ip6.arpa/127.0.0.1#10053
@@ -192,10 +194,16 @@ spec:
         # see: https://github.com/kubernetes/kubernetes/issues/29055 for details
         resources:
           requests:
-            cpu: 150m
-            memory: 10Mi
+            cpu: 250m
+            memory: 200Mi
+          limits:
+            cpu: 250m
+            memory: 200Mi
+        volumeMounts:
+          - name: kube-dns-config
+            mountPath: /etc/k8s/dns/dnsmasq-nanny
       - name: sidecar
-        image: gcr.io/google_containers/k8s-dns-sidecar-amd64:1.14.2
+        image: k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.10
         livenessProbe:
           httpGet:
             path: /metrics
@@ -208,16 +216,19 @@ spec:
         args:
         - --v=2
         - --logtostderr
-        - --probe=kubedns,127.0.0.1:10053,kubernetes.default.svc.cluster.local,5,A
-        - --probe=dnsmasq,127.0.0.1:53,kubernetes.default.svc.cluster.local,5,A
+        - --probe=kubedns,127.0.0.1:10053,kubernetes.default.svc.cluster.local,5,SRV
+        - --probe=dnsmasq,127.0.0.1:53,kubernetes.default.svc.cluster.local,5,SRV
         ports:
         - containerPort: 10054
           name: metrics
           protocol: TCP
         resources:
           requests:
-            memory: 20Mi
-            cpu: 10m
+            memory: 30Mi
+            cpu: 30m
+          limits:
+            memory: 30Mi
+            cpu: 30m
       dnsPolicy: Default  # Don't use cluster DNS.
 
 ---
