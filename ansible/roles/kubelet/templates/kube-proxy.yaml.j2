@@ -10,7 +10,7 @@ spec:
     image: gcr.io/google_containers/hyperkube-amd64:v{{k8s_ver}}
     resources:
       requests:
-        cpu: {{ kube_proxy_cpu }}
+        cpu: {% if inventory_hostname in groups['masters'] %}{{ kube_proxy_master_cpu }}{% else %}{{ kube_proxy_cpu }}{% endif %}
     command:
     - /hyperkube
     - proxy

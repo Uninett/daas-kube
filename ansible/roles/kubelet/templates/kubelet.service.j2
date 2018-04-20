@@ -26,7 +26,7 @@ ExecStart=/opt/kubernetes/kubelet-{{ k8s_ver }} \
   --node-status-update-frequency=4s \
   --eviction-minimum-reclaim=memory.available=100Mi,nodefs.available=1Gi,imagefs.available=2Gi \
   --eviction-hard=memory.available<{{ eviction_memory }},nodefs.available<{{ eviction_nodefs }},imagefs.available<{{ eviction_imagefs }} \
-  --system-reserved=cpu={{ system_reserved_cpu }},memory={{ system_reserved_memory }}
+  --system-reserved=cpu={% if inventory_hostname in groups['masters'] %}{{ system_reserved_master_cpu }}{% else %}{{ system_reserved_cpu }}{% endif %},memory={{ system_reserved_memory }}
 Restart=always
 RestartSec=10
 [Install]
