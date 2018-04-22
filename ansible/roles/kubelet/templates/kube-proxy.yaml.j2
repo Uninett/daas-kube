@@ -11,6 +11,7 @@ spec:
     resources:
       requests:
         cpu: {% if inventory_hostname in groups['masters'] %}{{ kube_proxy_master_cpu }}{% else %}{{ kube_proxy_cpu }}{% endif %}
+
     command:
     - /hyperkube
     - proxy
