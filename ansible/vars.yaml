@@ -29,8 +29,8 @@ mfs_state: present
 nvidia_version: 390.42
 lvm_vg_name: vg
 scratch_size: 250g
-calico_ipip: "off"
-calico_node_ver: 2.6.8
-calico_cni_ver: 1.11.4
-calico_k8s_controller_ver: 1.0.3
+calico_ipip_mode: "off"
+calico_node_ver: 3.1.1
+calico_cni_ver: 3.1.1
+calico_k8s_controller_ver: 3.1.1
 nvidia_docker_ver: 1.0.1
