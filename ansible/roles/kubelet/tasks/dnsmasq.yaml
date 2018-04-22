@@ -1,7 +1,0 @@
-- name: Add DNSMasq server manifest file
-  template:
-    src: dnsmasq.yaml.j2
-    dest: /etc/kubernetes/manifests/dnsmasq.yaml
-    owner: root
-    group: root
-    mode: 0644
