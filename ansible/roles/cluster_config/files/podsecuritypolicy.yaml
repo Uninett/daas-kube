@@ -3,10 +3,14 @@ kind: PodSecurityPolicy
 metadata:
   name: permissive
 spec:
+  allowPrivilegeEscalation: true
   hostPID: true
   hostIPC: true
   privileged: true
   hostNetwork: true
+  hostPorts:
+  - min: 1
+    max: 65535
   fsGroup:
     rule: RunAsAny
   runAsUser:
@@ -21,8 +25,8 @@ spec:
   - 'downwardAPI'
   - 'configMap'
   - 'persistentVolumeClaim'
-  - 'gitRepo'
   - 'hostPath'
+  - 'projected'
 
 ---
 apiVersion: extensions/v1beta1
@@ -33,6 +37,7 @@ metadata:
     seccomp.security.alpha.kubernetes.io/defaultProfileName: docker/default
     seccomp.security.alpha.kubernetes.io/allowedProfileNames: docker/default
 spec:
+  allowPrivilegeEscalation: true
   hostPID: false
   hostIPC: false
   privileged: false
@@ -68,7 +73,7 @@ spec:
   - 'downwardAPI'
   - 'configMap'
   - 'persistentVolumeClaim'
-  - 'gitRepo'
+  - 'projected'
 
 ---
 apiVersion: extensions/v1beta1
@@ -115,6 +120,7 @@ spec:
   - 'downwardAPI'
   - 'configMap'
   - 'persistentVolumeClaim'
+  - 'projected'
 
 ###### Cluster Roles ########
 
