@@ -19,6 +19,7 @@ ExecStart=/opt/kubernetes/kubelet-{{ k8s_ver }} \
   --cluster-dns={{ ansible_default_ipv4["address"] }} \
   --cluster-domain=cluster.local \
   --anonymous-auth=false \
+  --read-only-port=0 \
   --tls-cert-file=/etc/ssl/kubelet/node.pem \
   --tls-private-key-file=/etc/ssl/kubelet/node-key.pem \
   --client-ca-file=/etc/ssl/kubelet/ca.pem \

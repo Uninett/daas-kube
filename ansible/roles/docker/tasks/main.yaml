@@ -49,6 +49,20 @@
     force: yes
 - name: Pin Docker version
   command: apt-mark hold docker-ce
+- name: Create Docker systemd folder
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+- name: Copy Dockerd systemd fie
+  copy:
+    src: 01tasksmax.conf
+    dest: /etc/systemd/system/docker.service.d/01tasksmax.conf
+    owner: root
+    group: root
+    mode: 0644
 - name: Start Docker service
   service:
     name: docker

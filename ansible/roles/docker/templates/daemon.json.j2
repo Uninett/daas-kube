@@ -3,8 +3,11 @@
   "icc": false,
   "userland-proxy": false,
   "storage-driver": "overlay2",
+  "max-concurrent-downloads": 8,
+  "log-level": "warn",
   "log-driver": "json-file",
   "log-opts": {
-    "max-size": "50m"
+    "max-size": "10m",
+    "max-file": 5
   }
 }
