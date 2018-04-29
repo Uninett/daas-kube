@@ -185,7 +185,7 @@ spec:
       nodeSelector:
         lb: "true"
       containers:
-        - image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.13.0
+        - image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.14.0
           name: nginx-ingress-lb
           imagePullPolicy: Always
           livenessProbe:
