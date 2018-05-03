@@ -32,13 +32,14 @@ metadata:
   name: selfsubjectsccessreview-authenticated
 rules:
   - apiGroups:
-    - authentication.k8s.io
+    - authorization.k8s.io
     resources:
-    - selfsubjectaccessreviews
+    - selfsubjectrulesreviews
     verbs:
     - get
     - list
     - watch
+    - create
 
 ---
 kind: ClusterRoleBinding
