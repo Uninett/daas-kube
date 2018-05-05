@@ -28,6 +28,26 @@ kind: NetworkPolicy
 metadata:
     name: default-deny
     namespace: $NAMESPACE
+spec:
+    podSelector:
+      matchLabels: {}
+    egress:
+    - to:
+      - ipBlock:
+          cidr: "0.0.0.0/0"
+          except:
+          - "158.38.100.0/24"
+    - to:
+      - ipBlock:
+          cidr: "158.38.100.0/24"
+      ports:
+      - port: 53
+        protocol: TCP
+      - port: 53
+        protocol: UDP
+    policyTypes:
+    - Ingress
+    - Egress
 
 ---
 apiVersion: v1
