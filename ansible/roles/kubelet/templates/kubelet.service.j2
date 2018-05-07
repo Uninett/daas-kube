@@ -5,6 +5,7 @@ ExecStart=/opt/kubernetes/kubelet-{{ k8s_ver }} \
   --network-plugin=cni \
   --cni-bin-dir=/opt/cni/bin \
   --cni-conf-dir=/etc/cni/net.d \
+  --cadvisor-port=0 \
 {% if inventory_hostname in groups['masters'] %}
   --register-schedulable=false \
 {% endif %}
@@ -19,6 +20,7 @@ ExecStart=/opt/kubernetes/kubelet-{{ k8s_ver }} \
   --cluster-dns={{ ansible_default_ipv4["address"] }} \
   --cluster-domain=cluster.local \
   --anonymous-auth=false \
+  --authorization-mode=Webhook \
   --read-only-port=0 \
   --tls-cert-file=/etc/ssl/kubelet/node.pem \
   --tls-private-key-file=/etc/ssl/kubelet/node-key.pem \
