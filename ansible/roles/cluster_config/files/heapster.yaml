@@ -23,6 +23,15 @@ rules:
     - list
     - watch
   - apiGroups:
+    - ""
+    resources:
+    - nodes/stats
+    verbs:
+    - get
+    - list
+    - watch
+    - create
+  - apiGroups:
     - extensions
     resources:
     - deployments
@@ -93,8 +102,15 @@ spec:
     spec:
       serviceAccountName: heapster
       containers:
-        - image: gcr.io/google_containers/heapster:v1.3.0
+        - image: k8s.gcr.io/heapster-amd64:v1.5.3
           name: heapster
+          resources:
+            limits:
+              cpu: 600m
+              memory: 400Mi
+            requests:
+              cpu: 300m
+              memory: 200Mi
           livenessProbe:
             httpGet:
               path: /healthz
@@ -104,36 +120,7 @@ spec:
             timeoutSeconds: 5
           command:
             - /heapster
-            - --source=kubernetes.summary_api:''
-        - image: gcr.io/google_containers/addon-resizer:1.7
-          name: heapster-nanny
-          resources:
-            limits:
-              cpu: 50m
-              memory: 90Mi
-            requests:
-              cpu: 50m
-              memory: 90Mi
-          env:
-            - name: MY_POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: MY_POD_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-          command:
-            - /pod_nanny
-            - --cpu=80m
-            - --extra-cpu=4m
-            - --memory=200Mi
-            - --extra-memory=4Mi
-            - --threshold=5
-            - --deployment=heapster
-            - --container=heapster
-            - --poll-period=300000
-            - --estimator=exponential
+            - --source=kubernetes:https://kubernetes.default.svc.cluster.local?kubeletHttps=true&kubeletPort=10250&useServiceAccount=true&insecure=true
 
 ---
 
