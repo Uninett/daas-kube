@@ -7,3 +7,6 @@
 - name: Install nano
   apt:
     name: nano
+- name: Install Conntrack
+  apt:
+    name: conntrack

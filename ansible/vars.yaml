@@ -1,6 +1,6 @@
-k8s_ver: 1.8.12
+k8s_ver: 1.10.4
 #k8s_next_ver: 1.8.6
-etcd_ver: 3.2.19
+etcd_ver: 3.2.21
 #etcd_next_ver: 3.2.13
 docker_ver: docker-ce=17.09.1~ce-0~ubuntu
 apiserver_count: 3
