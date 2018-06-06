@@ -30,7 +30,7 @@ nvidia_version: 390.42
 lvm_vg_name: vg
 scratch_size: 250g
 calico_ipip_mode: "Never"
-calico_node_ver: 3.1.1
-calico_cni_ver: 3.1.1
-calico_k8s_controller_ver: 3.1.1
+calico_node_ver: 3.1.3
+calico_cni_ver: 3.1.3
+calico_k8s_controller_ver: 3.1.3
 nvidia_docker_ver: 1.0.1
