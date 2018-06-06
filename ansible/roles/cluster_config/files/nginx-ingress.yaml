@@ -185,9 +185,16 @@ spec:
       nodeSelector:
         lb: "true"
       containers:
-        - image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.14.0
+        - image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.15.0
           name: nginx-ingress-lb
           imagePullPolicy: Always
+          resources:
+            limits:
+              memory: 4G
+              cpu: "4"
+            requests:
+              memory: 4G
+              cpu: "4"
           livenessProbe:
             failureThreshold: 3
             httpGet:
