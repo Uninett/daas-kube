@@ -18,8 +18,17 @@
   command: chmod +x /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run
   when: nvidia|failed
   tags: gpu
+- name: Create installtion directory
+  file:
+    state: directory
+    path: /usr/local/nvidia
+    owner: root
+    group: root
+    mode: 0755
+  when: nvidia|failed
+  tags: gpu
 - name: Install NVIDIA Driver
-  command: /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run -a --ui=none --no-x-check
+  command: /tmp/NVIDIA-Linux-x86_64-{{ nvidia_version }}.run --utility-prefix=/usr/local/nvidia --opengl-prefix=/usr/local/nvidia -a --ui=none -q --no-x-check --no-install-compat32-libs
   when: nvidia|failed
   tags: gpu
 - name: Remove NVIDIA Installer
@@ -40,34 +49,50 @@
   command: update-initramfs -u
   tags: gpu
   when: nvidia|failed
-- name: Get Nvidia-Docker Volume plugin
-  get_url:
-    url: https://github.com/NVIDIA/nvidia-docker/releases/download/v{{ nvidia_docker_ver }}/nvidia-docker_{{ nvidia_docker_ver }}-1_amd64.deb
-    dest: /tmp/nvidia-docker_{{ nvidia_docker_ver }}-1_amd64.deb
+- name: Check nvidia lib path in system library path
+  command: grep -Fxq "/usr/local/nvidia/lib" /etc/ld.so.conf
+  register: nvidia_lib
+  ignore_errors: True
+  tags: gpu
+- name: Fix nvidia lib path
+  lineinfile:
+    dest=/etc/ld.so.conf
+    backup=yes
+    line="/usr/local/nvidia/lib"
+    owner=root
+    regexp='/usr/local/nvidia/lib'
+    state=present
+    insertafter=EOF
+    create=True
+  when: nvidia_lib|failed
+  tags: gpu
+- name: Update libs
+  command: ldconfig
+  when: nvidia_lib|failed
+  tags: gpu
+- name: Fix nvidia bin path
+  lineinfile:
+    dest=/etc/profile.d/nvidia.sh
+    backup=yes
+    line="export PATH=$PATH:/usr/local/nvidia/bin"
+    owner=root
+    regexp='export PATH=$PATH:/usr/local/nvidia/bin'
+    state=present
+    insertafter=EOF
+    create=True
+  when: nvidia_lib|failed
+  tags: gpu
+- name: Run nvidia installtion test
+  command: /usr/local/nvidia/bin/nvidia-persistenced && /usr/local/nvidia/bin/nvidia-smi
   when: nvidia|failed
   tags: gpu
-- name: Install Nvidia-Docker Volume plugin
-  command: dpkg -i /tmp/nvidia-docker_{{ nvidia_docker_ver }}-1_amd64.deb
+- name: Create nvidia UVM device
+  command: /usr/bin/nvidia-modprobe -c0 -u
   when: nvidia|failed
   tags: gpu
-- name: Fix Nvidia-Docker path issue
-  copy:
-    src: nvidia-docker.service
-    dest: /lib/systemd/system/nvidia-docker.service
-    owner: root
-    group: root
-    mode: 0644
+- name: Attach nvidia-gpu labels
+  command: kubectl --kubeconfig kubeconfig label --overwrite node {{ inventory_hostname }} nvidia-gpu=true
+  delegate_to: localhost
   when: nvidia|failed
-  tags: gpu
-- name: Reloading systemd
-  command: systemctl daemon-reload
-  when: nvidia|failed
-  tags: gpu
-- name: restart nvidia-docker
-  service: name=nvidia-docker state=restarted enabled=yes
-  when: nvidia|failed
-  tags: gpu
-- name: Run test nvidia-docker
-  command: nvidia-docker run --rm nvidia/cuda nvidia-smi
-  when: nvidia|failed
+  become: false
   tags: gpu

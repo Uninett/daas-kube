@@ -1,0 +1,147 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nvidia-gpu-device-plugin
+  namespace: kube-system
+
+---
+# PodSecurotyPolicy to allow mounting of hostPath volumes
+apiVersion: extensions/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: nvidia-gpu-device-plugin
+  annotations:
+    seccomp.security.alpha.kubernetes.io/defaultProfileName: docker/default
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: docker/default
+spec:
+  hostPID: false
+  hostIPC: false
+  privileged: true
+  hostNetwork: false
+  allowPrivilegeEscalation: true
+  allowedCapabilities:
+  - KILL
+  - CHOWN
+  - FSETID
+  - FOWNER
+  - NET_RAW
+  - SETGID
+  - SETUID
+  - SETFCAP
+  - SETPCAP
+  - AUDIT_WRITE
+  - NET_BIND_SERVICE
+  requiredDropCapabilities:
+  - MKNOD
+  - SYS_CHROOT
+  - DAC_OVERRIDE
+  fsGroup:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+  - 'secret'
+  - 'configMap'
+  - 'hostPath'
+
+---
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nvidia-gpu-device-plugin
+  namespace: kube-system
+rules:
+  - apiGroups:
+      - extensions
+    resources:
+      - podsecuritypolicies
+    resourceNames:
+      - nvidia-gpu-device-plugin
+    verbs:
+      - use
+
+---
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: nvidia-gpu-device-plugin
+  namespace: kube-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: nvidia-gpu-device-plugin
+subjects:
+  - kind: ServiceAccount
+    name: nvidia-gpu-device-plugin
+    namespace: kube-system
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nvidia-gpu-device-plugin
+  namespace: kube-system
+  labels:
+    k8s-app: nvidia-gpu-device-plugin
+    addonmanager.kubernetes.io/mode: Reconcile
+spec:
+  selector:
+    matchLabels:
+      k8s-app: nvidia-gpu-device-plugin
+  template:
+    metadata:
+      labels:
+        k8s-app: nvidia-gpu-device-plugin
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
+    spec:
+      serviceAccountName: nvidia-gpu-device-plugin
+      priorityClassName: system-node-critical
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nvidia-gpu
+                operator: In
+                values:
+                - "true"
+      tolerations:
+      - operator: "Exists"
+        effect: "NoExecute"
+      - operator: "Exists"
+        effect: "NoSchedule"
+      volumes:
+      - name: device-plugin
+        hostPath:
+          path: /var/lib/kubelet/device-plugins
+      - name: dev
+        hostPath:
+          path: /dev
+      containers:
+      - image: "k8s.gcr.io/nvidia-gpu-device-plugin@sha256:0842734032018be107fa2490c98156992911e3e1f2a21e059ff0105b07dd8e9e"
+        command: ["/usr/bin/nvidia-gpu-device-plugin", "-logtostderr", "-host-path=/usr/local/nvidia", "-container-path=/usr/local/nvidia"]
+        name: nvidia-gpu-device-plugin
+        resources:
+          requests:
+            cpu: 50m
+            memory: 30Mi
+          limits:
+            cpu: 50m
+            memory: 30Mi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: device-plugin
+          mountPath: /device-plugin
+        - name: dev
+          mountPath: /dev
+  updateStrategy:
+    type: RollingUpdate
