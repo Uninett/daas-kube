@@ -49,7 +49,7 @@ else
 	exit 1
 fi
 
-BINDNAME="$NAMESPACE-$ROLENAME-$(echo -n $ROLETYPE | tr A-Z a-z)-$TYPENAME"
+BINDNAME="$NAMESPACE-$ROLENAME-$(echo -n $ROLETYPE | tr A-Z a-z)-$TYPENAME-$(echo -n ${SUBJECTNAME: -5} | tr A-Z a-z)"
 
 echo "\"$BINDNAME\" is of which binding type:"
 echo "1. ClusterRoleBinding (it binds the given subject to given role in **whole cluster across namespaces**)"
