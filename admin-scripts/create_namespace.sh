@@ -18,6 +18,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: $NAMESPACE
+  annotations:
+    appstore.uninett.no/domains: $PROJECT.ioudaas.no
   labels:
     name: $NAMESPACE
     project: $PROJECT
@@ -45,9 +47,33 @@ spec:
         protocol: TCP
       - port: 53
         protocol: UDP
+      - port: 8443
+        protocol: TCP
     policyTypes:
     - Ingress
     - Egress
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cert-manager-solver
+  namespace: $NAMESPACE
+spec:
+  podSelector:
+    matchExpressions:
+    - key: certmanager.k8s.io/acme-http-domain
+      operator: Exists
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: kube-ingress
+      ports:
+        - protocol: TCP
+          port: 8089
+
 
 ---
 apiVersion: v1
@@ -86,3 +112,7 @@ spec:
     type: Container
 
 EOF
+
+echo "Please create a CNAME record in your cluster DNS zone as: _acme-challenge.$PROJECT.ioudaas.no CNAME $PROJECT.ioudaas.no.acme-dns.uninett.no."
+echo "This will be used to create the wildcard certificate using Lets encrypt DNS01 Challenge"
+
