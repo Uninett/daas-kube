@@ -1,5 +1,5 @@
-# Calico Version v2.6.5
-# https://docs.projectcalico.org/v2.6/releases#v2.6.5
+# Calico Version v3.2.3
+# https://docs.projectcalico.org/v3.2/releases#v3.2.3
 
 ---
 
@@ -61,6 +61,7 @@ rules:
       - namespaces
       - networkpolicies
       - nodes
+      - serviceaccounts
     verbs:
       - watch
       - list
@@ -137,12 +138,11 @@ subjects:
 
 ---
 
-# Calico Version v3.1.1
-# https://docs.projectcalico.org/v3.1/releases#v3.1.1
+# Calico Version v3.2.3
 # This manifest includes the following component versions:
-#   calico/node:v3.1.1
-#   calico/cni:v3.1.1
-#   calico/kube-controllers:v3.1.1
+#   calico/node:v3.2.3
+#   calico/cni:v3.2.3
+#   calico/kube-controllers:v3.2.3
 
 # This ConfigMap is used to configure a self-hosted Calico installation.
 kind: ConfigMap
@@ -161,6 +161,9 @@ data:
   # Configure the Calico backend to use.
   calico_backend: "bird"
 
+  # Configure the MTU to use
+  veth_mtu: "1440"
+
   # The CNI network configuration to install on each node.
   cni_network_config: |-
     {
@@ -174,7 +177,7 @@ data:
           "etcd_cert_file": "__ETCD_CERT_FILE__",
           "etcd_ca_cert_file": "__ETCD_CA_CERT_FILE__",
           "log_level": "info",
-          "mtu": 1500,
+          "mtu": __CNI_MTU__,
           "ipam": {
               "type": "calico-ipam"
           },
@@ -341,13 +344,16 @@ spec:
             httpGet:
               path: /liveness
               port: 9099
+              host: localhost
             periodSeconds: 10
             initialDelaySeconds: 10
             failureThreshold: 6
           readinessProbe:
-            httpGet:
-              path: /readiness
-              port: 9099
+            exec:
+              command:
+              - /bin/calico-node
+              - -bird-ready
+              - -felix-ready
             periodSeconds: 10
           volumeMounts:
             - mountPath: /lib/modules
@@ -386,6 +392,12 @@ spec:
                 configMapKeyRef:
                   name: calico-config
                   key: cni_network_config
+            # CNI MTU Config variable
+            - name: CNI_MTU
+              valueFrom:
+                configMapKeyRef:
+                  name: calico-config
+                  key: veth_mtu
           volumeMounts:
             - mountPath: /host/opt/cni/bin
               name: cni-bin-dir
@@ -506,6 +518,11 @@ spec:
             - name: hosts
               mountPath: /etc/hosts
               readOnly: true
+          readinessProbe:
+            exec:
+              command:
+              - /usr/bin/check-status
+              - -r
       volumes:
         # Mount in the etcd TLS secrets.
         - name: etcd-certs

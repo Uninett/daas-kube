@@ -104,7 +104,7 @@ spec:
       serviceAccount: dnsmasq-node
       containers:
       - name: dnsmasq
-        image: k8s.gcr.io/k8s-dns-dnsmasq-amd64:1.14.10
+        image: k8s.gcr.io/k8s-dns-dnsmasq-amd64:1.14.11
         livenessProbe:
           httpGet:
             path: /healthcheck/dnsmasq
@@ -134,7 +134,7 @@ spec:
             cpu: 350m
             memory: 300Mi
       - name: sidecar
-        image: k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.10
+        image: k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.13
         livenessProbe:
           httpGet:
             path: /metrics

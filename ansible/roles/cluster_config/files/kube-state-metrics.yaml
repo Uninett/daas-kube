@@ -20,6 +20,36 @@ rules:
     - services
     - limitranges
     - replicationcontrollers
+    - secrets
+    - configmaps
+    - endpoints
+    - persistentvolumes
+    - persistentvolumeclaims
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - batch
+    resources:
+    - jobs
+    - cronjobs
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - apps
+    resources:
+    - statefulsets
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - autoscaling
+    resources:
+    - horizontalpodautoscalers
     verbs:
     - get
     - list
@@ -68,7 +98,7 @@ spec:
       serviceAccountName: kube-state-metrics
       containers:
       - name: kube-state-metrics
-        image: gcr.io/google_containers/kube-state-metrics:v0.5.0
+        image: quay.io/coreos/kube-state-metrics:v1.4.0
         ports:
         - containerPort: 8080
 
