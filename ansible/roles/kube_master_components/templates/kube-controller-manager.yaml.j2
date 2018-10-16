@@ -31,6 +31,7 @@ spec:
     - --concurrent-gc-syncs=50
     - --use-service-account-credentials
     - --kubeconfig=/etc/kubernetes/kubeconfig-cm.yaml
+    - --cluster-cidr={{pod_ip_range}}
     - --feature-gates=ExperimentalCriticalPodAnnotation=true,TaintBasedEvictions=true,MountPropagation=true,DevicePlugins=True,PodPriority=false
     resources:
       requests:

@@ -2,4 +2,22 @@ apiVersion: kubeproxy.config.k8s.io/v1alpha1
 kind: KubeProxyConfiguration
 clientConnection:
   kubeconfig: /etc/kubernetes/kubeconfig.yaml
+  contentType: application/vnd.kubernetes.protobuf
 hostnameOverride: {{ inventory_hostname }}
+clusterCIDR: {{pod_ip_range}}
+configSyncPeriod: 5m0s
+conntrack:
+  max: 0
+  maxPerCore: 32768
+  min: 131072
+  tcpCloseWaitTimeout: 1h0m0s
+  tcpEstablishedTimeout: 24h0m0s
+enableProfiling: false
+iptables:
+  masqueradeAll: false
+  masqueradeBit: 14
+  minSyncPeriod: 0s
+  syncPeriod: 30s
+mode: iptables
+resourceContainer: /kube-proxy
+udpIdleTimeout: 250ms
