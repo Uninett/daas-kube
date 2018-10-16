@@ -4,17 +4,13 @@ ExecStart=/opt/kubernetes/kubelet-{{ k8s_ver }} \
   --network-plugin=cni \
   --cni-bin-dir=/opt/cni/bin \
   --cni-conf-dir=/etc/cni/net.d \
-  --cadvisor-port=0 \
   --cpu-manager-policy=static \
 {% if inventory_hostname in groups['masters'] %}
   --register-schedulable=false \
 {% endif %}
-{% if inventory_hostname in groups['gpu-workers'] %}
-  --feature-gates=Accelerators=true \
-{% endif %}
   --allow-privileged=true \
   --pod-manifest-path=/etc/kubernetes/manifests \
-  --feature-gates=Accelerators=true,ExperimentalCriticalPodAnnotation=true,TaintBasedEvictions=true,MountPropagation=true,DevicePlugins=True,PodPriority=True \
+  --feature-gates=ExperimentalCriticalPodAnnotation=true,TaintBasedEvictions=true,MountPropagation=true,DevicePlugins=True,PodPriority=false \
   --hostname-override={{ inventory_hostname }} \
   --node-labels=lb={% if lb is defined and lb=='true' %}true{% else %}false{% endif %},type={% if inventory_hostname in groups['masters'] %}master{% else %}worker{% endif %},node-role.kubernetes.io/{% if inventory_hostname in groups['masters'] %}master=true{% else %}worker=true{% endif %}  \
   --cluster-dns={{ ansible_default_ipv4["address"] }} \
