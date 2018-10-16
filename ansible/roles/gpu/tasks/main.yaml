@@ -96,3 +96,23 @@
   when: nvidia|failed
   become: false
   tags: gpu
+- name: Configure nvidiauvm service
+  copy:
+    dest: /etc/systemd/system/nvidiauvm.service
+    src: nvidiauvm.service
+    owner: root
+    group: root
+    mode: 0644
+  register: nvidiauvm_svc
+  tags: gpu
+- name: Reloading systemd
+  command: systemctl daemon-reload
+  when: nvidiauvm_svc.changed
+  tags: gpu
+- name: restart nvidiauvm
+  service: name=nvidiauvm state=restarted enabled=yes
+  when: nvidiauvm_svc.changed
+  tags: gpu
+- name: run nvidiauvm
+  service: name=kubelet state=started enabled=yes
+  tags: gpu

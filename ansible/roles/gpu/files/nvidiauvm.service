@@ -1,0 +1,10 @@
+[Unit]
+Description=Setup Nvidia UVM Device
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/nvidia-modprobe -c0 -u
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
