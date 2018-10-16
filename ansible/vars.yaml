@@ -2,7 +2,7 @@ k8s_ver: 1.11.3
 #k8s_next_ver: 1.8.6
 etcd_ver: 3.3.10
 #etcd_next_ver: 3.2.13
-docker_ver: docker-ce=17.09.1~ce-0~ubuntu
+docker_ver: docker-ce=18.06.1~ce~3-0~ubuntu
 apiserver_count: 3
 dns_service_ip: 172.16.0.10
 service_ip_range: 172.16.0.0/16
