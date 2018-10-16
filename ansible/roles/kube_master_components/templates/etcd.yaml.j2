@@ -17,8 +17,9 @@ spec:
     args:
     - --name={{ inventory_hostname }}
     - --data-dir=/var/lib/etcd
-    - --election-timeout=1500
-    - --heartbeat-interval=250
+    - --election-timeout=1000
+    - --heartbeat-interval=200
+    - --snapshot-count=5000
     - --listen-client-urls=https://0.0.0.0:2379
     - --listen-peer-urls=https://0.0.0.0:2380
     - --initial-advertise-peer-urls=https://{{ inventory_hostname }}.node.cluster.local:2380
