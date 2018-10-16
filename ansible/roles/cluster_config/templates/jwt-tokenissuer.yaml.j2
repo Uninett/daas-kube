@@ -50,9 +50,13 @@ spec:
       labels:
         app: jwt-tokenissuer
     spec:
+      securityContext:
+        runAsNonRoot: true
+      imagePullSecrets:
+      - name: registry.uninett.no
       containers:
       - name: jwt-tokenissuer
-        image: gurvin/jwt-tokenissuer:1.1
+        image: registry.uninett.no/daas/jwt-tokenissuer:1.1.5
         imagePullPolicy: Always
         resources:
           limits:
@@ -63,6 +67,8 @@ spec:
             memory: 100Mi
         ports:
         - containerPort: 8888
+        securityContext:
+          runAsUser: 65534
         readinessProbe:
           httpGet:
             path: /healthz
