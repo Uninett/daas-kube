@@ -13,6 +13,7 @@ spec:
     - scheduler
     - --master=http://127.0.0.1:8080
     - --leader-elect=true
+    - --profiling=fasle
     - --feature-gates=ExperimentalCriticalPodAnnotation=true,TaintBasedEvictions=true,MountPropagation=true,DevicePlugins=True,PodPriority=false
     resources:
       requests:

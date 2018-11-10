@@ -39,6 +39,7 @@ spec:
     - --storage-backend=etcd3
     - --apiserver-count={{ apiserver_count }}
     - --anonymous-auth=false
+    - --profiling=fasle
     - --kubelet-certificate-authority=/etc/ssl/kubelet/ca.pem
     - --kubelet-client-certificate=/etc/ssl/kubelet/node-client.pem
     - --kubelet-client-key=/etc/ssl/kubelet/node-client-key.pem

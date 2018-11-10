@@ -12,6 +12,7 @@ spec:
     - /hyperkube
     - controller-manager
     - --leader-elect=true
+    - --profiling=fasle
     - --service-account-private-key-file=/etc/kubernetes/service-key.pem
     - --root-ca-file=/etc/kubernetes/ssl/ca.pem
     - --node-monitor-period=2s
@@ -29,6 +30,7 @@ spec:
     - --concurrent-replicaset-syncs=40
     - --pod-eviction-timeout=30s
     - --concurrent-gc-syncs=50
+    - --terminated-pod-gc-threshold=1000
     - --use-service-account-credentials
     - --kubeconfig=/etc/kubernetes/kubeconfig-cm.yaml
     - --cluster-cidr={{pod_ip_range}}
